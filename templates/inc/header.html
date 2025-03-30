@@ -1,0 +1,98 @@
+{% load static %}
+<!-- Header -->
+    <header class="bg-rose-200 py-8 lg:pt-6 lg:pb-12">
+        <div
+            class="container mx-auto lg:relative flex flex-col lg:flex-row lg:justify-between gap-y-4 lg:gap-y-0 relative">
+
+            <!-- hamburger / sm-nav /start-->
+            <div
+                class="snav__close-btn absolute top-6 right-6 lg:static text-xl sm:text-2xl cursor-pointer z-40 text-gray-400 lg:hidden transition-all">
+                <i class="snav__close-btn-icon ri-menu-4-line" id="hamburger"></i>
+            </div><!-- hamburger / sm-nav /finished-->
+
+            <!-- Logo -->
+            <div class="flex justify-center lg:justify-normal">
+                <a href="#">
+                    <img src="{% static "img/divine-logo.png" %}" alt="" class="w-16 h-16">
+                </a>
+            </div>
+
+            <div class="flex flex-col gap-y-4 lg:flex-row lg:gap-x-10 lg:gap-y-0">
+
+                <!-- location -->
+                <div class="flex justify-center items-center lg:justify-normal gap-x-2">
+                    <i class="ri-map-pin-2-fill text-2xl text-gray-400"></i>
+                    <div>خیابان حافظ کوچه 23</div>
+                </div>
+
+                <!-- phone -->
+                <div class="flex justify-center items-center lg:justify-normal gap-x-2">
+                    <i class="ri-phone-fill text-2xl text-gray-400"></i>
+                    <div>(+98) 990 3972 200</div>
+                </div>
+
+                <!-- btn -->
+                <button class="btn btn-sm w-60 lg:w-auto mx-auto lg:mx-0">رزرو</button>
+
+                <!-- sm nav -->
+                <nav
+                    class="snav bg-white/90 fixed w-[300px] h-screen top-0 -right-[300px] shadow-2xl lg:hidden transition-all duration-300 z-30">
+                    <!-- nav tigger btn /look at front-->
+
+                    <div class="flex flex-col items-center gap-y-10 px-12 h-full">
+                        <!-- logo -->
+                        <div class="pt-20">
+                            <a href="#">
+                                <img src="{% static "img/divine-logo.png" %}" alt="" class="w-16 h-16">
+                            </a>
+                        </div>
+                        <!-- list -->
+                        <ul class="text-gray-400 flex flex-col items-center gap-y-5">
+                            <li><a href="#" class="transition-all duration-300 hover:text-rose-200">فروشگاه</a></li>
+                            <li><a href="#" class="transition-all duration-300 hover:text-rose-200">محصولات</a></li>
+                            <li><a href="#" class="transition-all duration-300 hover:text-rose-200">سبدخرید</a></li>
+                            <li><a href="#" class="transition-all duration-300 hover:text-rose-200">ورود</a></li>
+                            <li><a href="#" class="transition-all duration-300 hover:text-rose-200">خروج</a></li>
+                        </ul>
+                        <!-- form -->
+                        <form class="relative flex gap-x-3" dir="rtl">
+                            <label for="snav-search-input">
+                                <i class="ri-search-line text-xl text-rose-200"></i>
+                            </label>
+                            <input type="text" id="snav-search-input" placeholder="جستجو ..." class="text-gray-400 outline-none w-[160px] border-b-2 focus:border-b-2 focus:border-rose-200 
+                            placeholder:italic">
+                        </form>
+                    </div>
+                </nav>
+
+                <!-- desktop nav-->
+                <nav class="bg-white/90 absolute w-full h-16 left-0 -bottom-[86px] shadow-md hover:shadow-lg rounded-[10px] hidden lg:flex lg:items-center lg:justify-between lg:px-14 transition-all duration-300 delay-75"
+                    dir="rtl">
+                    <!-- list -->
+                    <ul class="text-gray-400 flex  gap-x-4">
+                        <li><a href="#"
+                                class="border-l  pl-4 transition-all duration-300 hover:text-rose-200">فروشگاه</a></li>
+                        <li><a href="#"
+                                class="border-l  pl-4 transition-all duration-300 hover:text-rose-200">محصولات</a></li>
+                        <li><a href="#"
+                                class="border-l  pl-4 transition-all duration-300 hover:text-rose-200">سبدخرید</a></li>
+                        <li><a href="#" class="border-l  pl-4 transition-all duration-300 hover:text-rose-200">ورود</a>
+                        </li>
+                        <li><a href="#" class="transition-all duration-300 hover:text-rose-200">خروج</a>
+                        </li>
+                    </ul>
+
+                    <!-- form -->
+                    <form class="relative flex gap-x-3">
+                        <label for="search-input" class="flex justify-center items-center group-[]:">
+                            <i class="ri-search-line text-xl text-rose-200"></i>
+                        </label>
+                        <input type="text" id="search-input" placeholder="جستجو ..." class="text-gray-400 outline-none w-[100px] focus:w-[180px] focus:border-b-2 focus:border-rose-200 
+                        placeholder:italic placeholder:text-base transition-all duration-150">
+                    </form>
+                </nav>
+
+            </div>
+        </div>
+    </header>
+    <!--  -->
