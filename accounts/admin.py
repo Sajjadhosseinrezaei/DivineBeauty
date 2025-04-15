@@ -1,10 +1,14 @@
 from django.contrib import admin
 from .models import CustomUser, UserProfile
+from .forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # Register your models here.
 
 @admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
+class CustomUserAdmin(BaseUserAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active')
     list_filter = ('is_staff', 'is_active')
     search_fields = ('email', 'first_name', 'last_name')
@@ -15,6 +19,13 @@ class CustomUserAdmin(admin.ModelAdmin):
         ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser')}),
     )
     readonly_fields = ('last_login', 'date_joined')
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'first_name', 'last_name', 'phone_number', 'date_of_birth', 'password1', 'password2', 'is_staff', 'is_active', 'is_superuser')}
+        ),
+    )
 
 
      # ✅ حذف is_superuser برای کاربران غیر سوپریوزر
