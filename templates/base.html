@@ -1,27 +1,35 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- icon -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.min.css" />
     <!-- css -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     <!-- swiper -->
-     <link rel="stylesheet" href="{% static "js/swiper-bundle.min.js" %}">
+    <link rel="stylesheet" href="{% static 'js/swiper-bundle.min.js' %}" />
 
-    <title>{% block title %}{% endblock title %}</title>
-</head>
-<body>
-    {% include "inc/header.html" %}
-    {% block body %}{% endblock body %}
+    <title>
+      {% block title %}
+      {% endblock %}
+    </title>
+  </head>
+  <body>
+    {% include 'inc/header.html' %}
+    <!-- contact.html -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
 
+    {% block body %}
+    {% endblock %}
 
-
-
-    <script src="{% static "js/swiper-bundle.min.js" %}" ></script>
-    <!-- main js-->
-     <script src="{% static "js/main.js" %}"></script>
-</body>
+    <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+    <!-- main js -->
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
 </html>
