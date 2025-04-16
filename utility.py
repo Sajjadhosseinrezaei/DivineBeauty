@@ -17,3 +17,20 @@ def redirect_with_next(request, default='/', param_name='next'):
     if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
         return redirect(next_url)
     return redirect(default)
+
+
+
+# your_app/fields.py
+from django.db import models
+from slugify import slugify
+
+class AutoSlugField(models.SlugField):
+    def pre_save(self, model_instance, add):
+        slug = getattr(model_instance, self.attname)
+        if not slug:
+            base_value = getattr(model_instance, 'name', None)  # از name می‌سازه
+            if base_value:
+                slug = slugify(base_value)
+                setattr(model_instance, self.attname, slug)
+        return slug
+

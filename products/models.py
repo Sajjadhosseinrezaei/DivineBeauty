@@ -1,5 +1,6 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
+from utility import AutoSlugField
 
 class Brand(models.Model):
     name = models.CharField(max_length=200, verbose_name="نام برند")
@@ -36,15 +37,15 @@ class Category(MPTTModel):
 # Create your models here.
 class Product(models.Model):
     name = models.CharField(max_length=200, verbose_name="نام محصول")
-    slug = models.SlugField(unique=True, verbose_name="نامک")
+    slug = AutoSlugField(unique=True, verbose_name="نامک", blank=True, null=True)
     description = models.TextField(verbose_name="توضیحات محصول")
     main_image = models.ImageField(upload_to='products/main/', blank=True, null=True, verbose_name="تصویر اصلی")
     price = models.IntegerField(verbose_name="قیمت")
     skintype = models.CharField(max_length=20, choices=SkinType.choices, verbose_name="نوع پوست", blank=True, null=True)
     discount_price = models.IntegerField(blank=True, null=True, verbose_name="قیمت تخفیف‌خورده")
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, verbose_name="دسته‌بندی")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="دسته‌بندی")
     stock = models.PositiveIntegerField(default=0, verbose_name="موجودی انبار")
-    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, verbose_name="برند")
+    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, verbose_name="برند", blank=True)
     lable = models.ManyToManyField(ProductLabel, blank=True, verbose_name="برچسب")
     is_available = models.BooleanField(default=True, verbose_name="موجود")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
