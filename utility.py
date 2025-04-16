@@ -19,8 +19,6 @@ def redirect_with_next(request, default='/', param_name='next'):
     return redirect(default)
 
 
-
-# your_app/fields.py
 from django.db import models
 from slugify import slugify
 
