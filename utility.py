@@ -23,6 +23,10 @@ from django.db import models
 from slugify import slugify
 
 class AutoSlugField(models.SlugField):
+    """
+    A custom SlugField that automatically generates a slug from the name field
+    if the slug field is empty.
+    """
     def pre_save(self, model_instance, add):
         slug = getattr(model_instance, self.attname)
         if not slug:
