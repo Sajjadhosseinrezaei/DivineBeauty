@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for product in products %}
+        <div>
+            <h2>{{ product.name }}</h2>
+            <p>Price: {{ product.price }}</p>
+            <p>Description: {{ product.description }}</p>
+            <a href="{% url "products:product_detail" product.slug %}">برو به بیشتر</a>
+        </div>
+    {% empty %}
+        <p>No products available.</p>
+    {% endfor %}
+
+    <div class="pagination">
+        {% if products.has_previous %}
+            <a href="?page={{ products.previous_page_number }}">قبلی</a>
+        {% endif %}
+
+        <span>صفحه {{ products.number }} از {{ products.paginator.num_pages }}</span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}">بعدی</a>
+        {% endif %}
+    </div>
+</body>
+</html>
