@@ -28,7 +28,7 @@ class AutoSlugField(models.SlugField):
         if not slug:
             base_value = getattr(model_instance, 'name', None)  # از name می‌سازه
             if base_value:
-                slug = slugify(base_value)
+                slug = slugify(base_value, allow_unicode=True) # ساخت اسلاگ فارسی
                 setattr(model_instance, self.attname, slug)
         return slug
 
