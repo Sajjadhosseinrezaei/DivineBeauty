@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'home.apps.HomeConfig',
     'products.apps.ProductsConfig',
+    'products_api.apps.ProductsApiConfig',
+
+    # thireid party apps
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
