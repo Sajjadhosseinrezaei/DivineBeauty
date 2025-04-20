@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Verify Email</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,46 +29,62 @@
             text-align: center;
             color: #333;
         }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        ul li {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        ul li.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        ul li.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
         form {
             display: flex;
             flex-direction: column;
         }
-        label {
-            font-size: 14px;
-            margin-bottom: 5px;
-            color: #555;
-        }
-        input[type="text"], input[type="password"], input[type="email"], button {
+        input[type="email"], input[type="submit"] {
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
         }
-        button {
+        input[type="submit"] {
             background-color: #007bff;
             color: #fff;
             cursor: pointer;
             border: none;
         }
-        button:hover {
+        input[type="submit"]:hover {
             background-color: #0056b3;
-        }
-        .hidden-input {
-            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Register</h1>
+        <h1>Verify Your Email</h1>
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         <form action="" method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Register</button>
-            {% if request.GET.next %}
-                <input type="hidden" name="next" value="{{ request.GET.next }}" class="hidden-input">
-            {% endif %}
+            <input type="submit" value="Send Verification Code">
         </form>
     </div>
 </body>

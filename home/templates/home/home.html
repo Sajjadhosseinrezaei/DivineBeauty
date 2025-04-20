@@ -1,7 +1,242 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock title %}
 
-{% block body %}
-<h1>Welcome to the Home Page</h1>
-<p>This is the home page of our Django application.</p>
+{% block content %}
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container-fluid p-0">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="display-4 fw-bold">زیبایی را با ما تجربه کنید</h1>
+                    <p class="lead">با محصولات با کیفیت و اصل گلبرگ، زیبایی را به ارمغان بیاورید</p>
+                    <button class="btn btn-shop">همین حالا خرید کن</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Products Section -->
+    <section class="products-section py-5">
+        <div class="container">
+            <div class="section-title">
+                <h2>محصولات ویژه</h2>
+                <p>پرفروش‌ترین و محبوب‌ترین محصولات ما</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="/api/placeholder/300/300" alt="محصول ۱" class="img-fluid">
+                            <div class="product-tag">جدید</div>
+                        </div>
+                        <div class="product-info">
+                            <h3>کرم مرطوب کننده</h3>
+                            <div class="product-price">
+                                <span class="price">۱۸۵,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn add-to-cart">افزودن به سبد</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="/api/placeholder/300/300" alt="محصول ۲" class="img-fluid">
+                            <div class="product-tag product-tag-discount">۲۰٪ تخفیف</div>
+                        </div>
+                        <div class="product-info">
+                            <h3>پالت سایه چشم</h3>
+                            <div class="product-price">
+                                <span class="price-old">۳۵۰,۰۰۰ تومان</span>
+                                <span class="price">۲۸۰,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn add-to-cart">افزودن به سبد</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="/api/placeholder/300/300" alt="محصول ۳" class="img-fluid">
+                        </div>
+                        <div class="product-info">
+                            <h3>رژ لب مات</h3>
+                            <div class="product-price">
+                                <span class="price">۱۴۵,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn add-to-cart">افزودن به سبد</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="/api/placeholder/300/300" alt="محصول ۴" class="img-fluid">
+                        </div>
+                        <div class="product-info">
+                            <h3>سرم ضد چروک</h3>
+                            <div class="product-price">
+                                <span class="price">۳۲۰,۰۰۰ تومان</span>
+                            </div>
+                            <button class="btn add-to-cart">افزودن به سبد</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-outline-primary">مشاهده همه محصولات</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section py-5">
+        <div class="container">
+            <div class="section-title">
+                <h2>دسته‌بندی‌های محصولات</h2>
+                <p>محصولات مورد نظر خود را بر اساس دسته‌بندی پیدا کنید</p>
+            </div>
+            <div class="row">
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-spa"></i>
+                        </div>
+                        <h3>مراقبت پوست</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <h3>لوازم آرایشی</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-spray-can"></i>
+                        </div>
+                        <h3>عطر و ادکلن</h3>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-pump-soap"></i>
+                        </div>
+                        <h3>بهداشت شخصی</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="about-text">
+                        <h2>درباره گلبرگ</h2>
+                        <p>فروشگاه گلبرگ با بیش از ۱۰ سال سابقه در زمینه فروش محصولات آرایشی و بهداشتی اصل و با کیفیت، یکی از معتبرترین فروشگاه‌های آنلاین در ایران است. ما افتخار می‌کنیم که همواره رضایت مشتریان را در اولویت قرار داده‌ایم.</p>
+                        <p>تمامی محصولات ما دارای ضمانت اصالت کالا هستند و با بهترین قیمت ارائه می‌شوند. همچنین ارسال سریع محصولات به سراسر کشور از دیگر خدمات ما به مشتریان عزیز است.</p>
+                        <a href="#" class="btn btn-outline-primary">بیشتر بدانید</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-image">
+                        <img src="/api/placeholder/600/400" alt="درباره گلبرگ" class="img-fluid rounded">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section py-5">
+        <div class="container">
+            <div class="section-title">
+                <h2>نظرات مشتریان</h2>
+                <p>آنچه مشتریان ما درباره محصولات و خدمات ما می‌گویند</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"کیفیت محصولات گلبرگ بی‌نظیر است. من همیشه از این فروشگاه خرید می‌کنم و کاملاً راضی هستم."</p>
+                        </div>
+                        <div class="testimonial-user">
+                            <div class="user-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="user-name">سارا احمدی</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"ارسال سریع و بسته‌بندی عالی! محصولات همیشه سالم به دست من می‌رسند و کیفیت آن‌ها عالی است."</p>
+                        </div>
+                        <div class="testimonial-user">
+                            <div class="user-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <div class="user-name">مریم حسینی</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"قیمت‌های مناسب و محصولات با کیفیت. پشتیبانی عالی و پاسخگویی سریع به سوالات من."</p>
+                        </div>
+                        <div class="testimonial-user">
+                            <div class="user-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="user-name">نیلوفر کریمی</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section py-5">
+        <div class="container">
+            <div class="newsletter-box">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <h3>عضویت در خبرنامه</h3>
+                        <p>با عضویت در خبرنامه ما، از آخرین محصولات و تخفیف‌های ویژه ما باخبر شوید.</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <form class="newsletter-form">
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="ایمیل خود را وارد کنید...">
+                                <button class="btn btn-primary" type="submit">عضویت</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock%}

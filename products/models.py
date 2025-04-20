@@ -17,7 +17,7 @@ class SkinType(models.TextChoices):
 
 class ProductLabel(models.Model):
     name = models.CharField(max_length=200, verbose_name="نام برچسب")
-    slug = models.SlugField(unique=True, verbose_name="نامک")
+    slug = AutoSlugField(max_length=200,unique=True, verbose_name="نامک", blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -25,7 +25,7 @@ class ProductLabel(models.Model):
 
 class Category(MPTTModel):
     name = models.CharField(max_length=200, verbose_name="نام دسته‌بندی")
-    slug = models.SlugField(unique=True, verbose_name="نامک")
+    slug = AutoSlugField(max_length=200,unique=True, verbose_name="نامک", blank=True, null=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="دسته‌بندی والد")
 
     class MPTTMeta:
@@ -37,7 +37,7 @@ class Category(MPTTModel):
 # Create your models here.
 class Product(models.Model):
     name = models.CharField(max_length=200, verbose_name="نام محصول")
-    slug = AutoSlugField(unique=True, verbose_name="نامک", blank=True, null=True)
+    slug = AutoSlugField(max_length=200, unique=True, verbose_name="نامک", blank=True, null=True)
     description = models.TextField(verbose_name="توضیحات محصول")
     main_image = models.ImageField(upload_to='products/main/', blank=True, null=True, verbose_name="تصویر اصلی")
     price = models.IntegerField(verbose_name="قیمت")

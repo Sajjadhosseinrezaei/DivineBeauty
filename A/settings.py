@@ -154,5 +154,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # آدرس جیمیل خودت
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # رمز عبور اپ (توضیحش پایین هست)
+EMAIL_HOST_USER = 'sajjadhosseinrezay6@gmail.com'  # آدرس جیمیل خودت
+EMAIL_HOST_PASSWORD = 'srafcezjftffxyps'  # رمز عبور اپ (توضیحش پایین هست)

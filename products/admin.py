@@ -20,7 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
         ('موجودی و وضعیت', {'fields': ('stock', 'is_available')}),
         ('تاریخ‌ها', {'fields': ('created_at', 'updated_at')}),
     )
-
+    
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
     list_display = ('name',)
