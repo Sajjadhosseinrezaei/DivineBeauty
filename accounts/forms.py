@@ -23,6 +23,9 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
+class EmailForm(forms.Form):
+    email = forms.EmailField(required=True, label='Email')
+
 class OtpForm(forms.Form):
     otp = forms.CharField(max_length=6, required=True, label='OTP')
 
