@@ -4,19 +4,19 @@ from .models import Product, Brand, ProductLabel, Category, ProductImage
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'discount_price', 'brand', 'stock', 'is_available', 'created_at')
+    list_display = ('name','main_image', 'price', 'discount_price', 'brand', 'stock', 'is_available', 'created_at')
     list_filter = ('is_available', 'brand', 'category', 'skintype')
     search_fields = ('name', 'description')
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ('is_available', 'stock')
     readonly_fields = ('created_at', 'updated_at')
-    filter_horizontal = ('lable',)
+    filter_horizontal = ('label',)
 
     fieldsets = (
         (None, {'fields': ('name', 'slug', 'description', 'main_image')}),
         ('قیمت‌گذاری', {'fields': ('price', 'discount_price')}),
         ('اطلاعات بیشتر', {'fields': ('skintype', 'expiration_date', 'usage_instructions')}),
-        ('دسته‌بندی و برند', {'fields': ('category', 'brand', 'lable')}),
+        ('دسته‌بندی و برند', {'fields': ('category', 'brand', 'label')}),
         ('موجودی و وضعیت', {'fields': ('stock', 'is_available')}),
         ('تاریخ‌ها', {'fields': ('created_at', 'updated_at')}),
     )

@@ -171,8 +171,8 @@ a:hover {
 /* ==================== HERO SECTION ==================== */
 .hero-section {
   position: relative;
-  height: 600px;
-  background-image: url('/api/placeholder/1920/600');
+  height: 400px;
+  background-image: url('/static/img/close-up-collection-make-up-beauty-products.svg');
   background-size: cover;
   background-position: center;
   display: flex;

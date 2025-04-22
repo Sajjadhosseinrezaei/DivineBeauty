@@ -46,7 +46,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="دسته‌بندی")
     stock = models.PositiveIntegerField(default=0, verbose_name="موجودی انبار")
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, verbose_name="برند", blank=True)
-    lable = models.ManyToManyField(ProductLabel, blank=True, verbose_name="برچسب")
+    label = models.ManyToManyField(ProductLabel, blank=True, verbose_name="برچسب")
     is_available = models.BooleanField(default=True, verbose_name="موجود")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ بروزرسانی")
@@ -67,3 +67,5 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.product.name
+    
+

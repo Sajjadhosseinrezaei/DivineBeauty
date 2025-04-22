@@ -24,65 +24,29 @@
                 <p>پرفروش‌ترین و محبوب‌ترین محصولات ما</p>
             </div>
             <div class="row">
-                <div class="col-md-6 col-lg-3 mb-4">
+                {% for product in products %}
+                	<div class="col-md-6 col-lg-3 mb-4">
                     <div class="product-card">
                         <div class="product-image">
-                            <img src="/api/placeholder/300/300" alt="محصول ۱" class="img-fluid">
-                            <div class="product-tag">جدید</div>
+                            {% if product.main_image %}
+                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="img-fluid">
+                            {% endif %}
+                            {% if product.label %}
+                                {% for label in product.label.all %}
+                                    <div class="product-tag">{{ label }}</div>
+                                {% endfor %}
+                                {% endif %}
                         </div>
                         <div class="product-info">
-                            <h3>کرم مرطوب کننده</h3>
+                            <h3>{{ product.name }}</h3>
                             <div class="product-price">
-                                <span class="price">۱۸۵,۰۰۰ تومان</span>
+                                <span class="price">{{ product.price }} تومان</span>
                             </div>
                             <button class="btn add-to-cart">افزودن به سبد</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="/api/placeholder/300/300" alt="محصول ۲" class="img-fluid">
-                            <div class="product-tag product-tag-discount">۲۰٪ تخفیف</div>
-                        </div>
-                        <div class="product-info">
-                            <h3>پالت سایه چشم</h3>
-                            <div class="product-price">
-                                <span class="price-old">۳۵۰,۰۰۰ تومان</span>
-                                <span class="price">۲۸۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn add-to-cart">افزودن به سبد</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="/api/placeholder/300/300" alt="محصول ۳" class="img-fluid">
-                        </div>
-                        <div class="product-info">
-                            <h3>رژ لب مات</h3>
-                            <div class="product-price">
-                                <span class="price">۱۴۵,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn add-to-cart">افزودن به سبد</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="/api/placeholder/300/300" alt="محصول ۴" class="img-fluid">
-                        </div>
-                        <div class="product-info">
-                            <h3>سرم ضد چروک</h3>
-                            <div class="product-price">
-                                <span class="price">۳۲۰,۰۰۰ تومان</span>
-                            </div>
-                            <button class="btn add-to-cart">افزودن به سبد</button>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
             <div class="text-center mt-4">
                 <a href="#" class="btn btn-outline-primary">مشاهده همه محصولات</a>
