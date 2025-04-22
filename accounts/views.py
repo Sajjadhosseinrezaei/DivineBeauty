@@ -168,7 +168,7 @@ class UserLoginView(View):
         return render(request, self.template_name, {'form': form})
     
 class UserLogoutView(LoginRequiredMixin, View):
-    def post(self, request):
+    def get(self, request):
         logout(request)
         messages.success(request, 'Logged out successfully.')
         return redirect('home:home')

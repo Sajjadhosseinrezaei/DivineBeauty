@@ -1,19 +1,145 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ product.name }}</title>
-</head>
-<body>
-    <div class="product-detail">
-        <h1>{{ product.name }}</h1>
-        <p><strong>Price:</strong> {{ product.price }}</p>
-        <p><strong>Description:</strong> {{ product.description }}</p>
-        {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-        {% endif %}
-        <a href="{% url 'products:product_list' %}">Back to Products</a>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+    <!-- Product Details -->
+    <section class="product-details">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 mb-4 mb-lg-0">
+                    {% if product.main_image %}
+                    <div class="product-gallery">
+                        <div class="product-badge">جدید</div>
+                        <div class="product-gallery-main">
+                            <img src="{{ product.main_image.url}}" alt="کرم مرطوب کننده" id="main-image">
+                        </div>
+                        <div class="product-gallery-thumbs">
+                            {% for img in product.images.all %}
+                            <div class="gallery-thumb active" data-src="{{img.image.url}}">
+                                <img src="{{img.image.url}}" alt="{{product.name}}">
+                            </div>
+                            {% empty%}
+                            <p>no image</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-lg-7">
+                    <div class="product-info">
+                        <h1>{{ product.name }}</h1>
+                        
+                        <div class="product-rating">
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <div class="rating-count">(۳۵ نظر)</div>
+                        </div>
+                        
+                        <div class="product-price">
+                            <span class="current-price">{{product.get_final_price}} تومان</span>
+                            <span class="old-price">{{product.price}} تومان</span>
+                            <span class="discount-badge">{{product.get_discount_percentage}} تخفیف</span>
+                        </div>
+                        
+                        <div class="product-description">
+                           <p>{{product.descriptions}}</p>
+                        </div>
+                        
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <div class="meta-label">برند:</div>
+                                <div class="meta-value">{{product.brand}}</div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-label">موجودیت:</div>
+                                {% if product.stock %}
+                                <div class="meta-value"> {{prodoct.stock}}در انبار موجود است</div>
+                               {% else %}
+                                <div class="meta-value">در انبار موجود نیست</div>
+                                {% endif %}
+                            </div>
+                            {% if product.sckintype %}
+                            <div class="meta-item">
+                                <div class="meta-label">نوع پوست:</div>
+                                <div class="meta-value">{{product.skintype}}</div>
+                            </div>
+                            {% endif %}
+                            {% for key , value in product.attributes %}
+                            <div class="meta-item">
+                                <div class="meta-label">{{key}}:</div>
+                                <div class="meta-value">{{value}}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="product-quantity">
+                            <div class="quantity-label">تعداد:</div>
+                            <div class="quantity-input">
+                                <button class="quantity-btn decrease-btn" id="decrease-btn">-</button>
+                                <input type="text" class="quantity-number" id="quantity-number" value="1" min="1" readonly>
+                                <button class="quantity-btn increase-btn" id="increase-btn">+</button>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="product-actions">
+                            <button class="btn btn-add-to-cart">
+                                <i class="fas fa-shopping-bag"></i>
+                                افزودن به سبد خرید
+                            </button>
+                            <button class="btn btn-wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="product-share">
+                            <div class="share-label">اشتراک‌گذاری:</div>
+                            <div class="share-links">
+                                <a href="#"><i class="fab fa-telegram"></i></a>
+                                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fas fa-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const thumbnails = document.querySelectorAll('.gallery-thumb');
+            const mainImage = document.getElementById('main-image');
+            
+            thumbnails.forEach(function(thumb) {
+                thumb.addEventListener('click', function() {
+                    const newImageSrc = this.getAttribute('data-src');
+                    mainImage.setAttribute('src', newImageSrc);
+                });
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const decreaseBtn = document.getElementById('decrease-btn');
+            const increaseBtn = document.getElementById('increase-btn');
+            const quantityInput = document.getElementById('quantity-number');
+        
+            // افزایش مقدار
+            increaseBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            });
+        
+            // کاهش مقدار
+            decreaseBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+        });
+         
+    </script>
+{% endblock content %}

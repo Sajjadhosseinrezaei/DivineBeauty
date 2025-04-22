@@ -21,9 +21,11 @@ class ProductLabel(models.Model):
 
     def __str__(self):
         return self.name
+    
 
 
 class Category(MPTTModel):
+    
     name = models.CharField(max_length=200, verbose_name="نام دسته‌بندی")
     slug = AutoSlugField(max_length=200,unique=True, verbose_name="نامک", blank=True, null=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="دسته‌بندی والد")
@@ -38,7 +40,7 @@ class Category(MPTTModel):
 class Product(models.Model):
     name = models.CharField(max_length=200, verbose_name="نام محصول")
     slug = AutoSlugField(max_length=200, unique=True, verbose_name="نامک", blank=True, null=True)
-    description = models.TextField(verbose_name="توضیحات محصول")
+    description = models.TextField(blank=True, null=True, verbose_name="توضیحات محصول")
     main_image = models.ImageField(upload_to='products/main/', blank=True, null=True, verbose_name="تصویر اصلی")
     price = models.IntegerField(verbose_name="قیمت")
     skintype = models.CharField(max_length=20, choices=SkinType.choices, verbose_name="نوع پوست", blank=True, null=True)
@@ -52,12 +54,18 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ بروزرسانی")
     expiration_date = models.DateField(blank=True, null=True, verbose_name="تاریخ انقضا")  # برای محصولات با تاریخ انقضا
     usage_instructions = models.TextField(blank=True, null=True, verbose_name="دستورالعمل مصرف")
+    attributes = models.JSONField(blank=True, null=True, verbose_name="ویژگی‌ها")  # برای ویژگی‌های اضافی
     
     def __str__(self):
         return self.name
 
     def get_final_price(self):
         return self.discount_price if self.discount_price else self.price
+    
+    def get_discount_percentage(self):
+        if self.discount_price:
+            return round((self.price - self.discount_price) / self.price * 100)
+        return 0
 
 
 
