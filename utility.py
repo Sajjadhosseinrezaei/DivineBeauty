@@ -3,24 +3,23 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.db import models
 from slugify import slugify
 import secrets
-import  bcrypt
+import bcrypt
 from django.core.mail import send_mail
 import time
 from django.contrib import messages
 
 
-
-
 def redirect_with_next(request, default='/', param_name='next'):
     """
-    Redirects user to a safe 'next' URL if available, otherwise to default.
+    کاربر را به آدرس 'next' ایمن هدایت می‌کند، در صورتی که موجود باشد،
+    در غیر این صورت به آدرس پیش‌فرض هدایت می‌کند.
 
-    Args:
-        request: The current HttpRequest object.
-        default: The fallback URL to redirect if next is invalid or missing.
-        param_name: The GET or POST param to check for next URL (default is 'next').
+    آرگومان‌ها:
+        request: شیء HttpRequest کنونی.
+        default: آدرس پیش‌فرض برای هدایت اگر 'next' معتبر یا موجود نباشد.
+        param_name: پارامتر GET یا POST برای بررسی آدرس بعدی (پیش‌فرض 'next').
 
-    Returns:
+    بازگشت:
         HttpResponseRedirect
     """
     next_url = request.GET.get(param_name) or request.POST.get(param_name)
@@ -32,15 +31,15 @@ def redirect_with_next(request, default='/', param_name='next'):
 
 class AutoSlugField(models.SlugField):
     """
-    A custom SlugField that automatically generates a slug from the name field
-    if the slug field is empty.
+    یک فیلد Slug سفارشی که به طور خودکار اسلاگ را از فیلد نام تولید می‌کند
+    اگر فیلد اسلاگ خالی باشد.
     """
     def pre_save(self, model_instance, add):
         slug = getattr(model_instance, self.attname)
         if not slug:
-            base_value = getattr(model_instance, 'name', None)  # از name می‌سازه
+            base_value = getattr(model_instance, 'name', None)  # از name می‌سازد
             if base_value:
-                slug = slugify(base_value, allow_unicode=True) # ساخت اسلاگ فارسی
+                slug = slugify(base_value, allow_unicode=True)  # ساخت اسلاگ فارسی
                 setattr(model_instance, self.attname, slug)
         return slug
     
@@ -54,11 +53,11 @@ class OTPManager:
 
     @staticmethod
     def hash_otp(otp):
-        return bcrypt.hashpw(otp.encode(), bcrypt.gensalt()).decode()  # خروجی string
+        return bcrypt.hashpw(otp.encode(), bcrypt.gensalt()).decode()  # خروجی به صورت رشته
 
     @staticmethod
     def verify_otp(otp, otp_hash):
-        return bcrypt.checkpw(otp.encode(), otp_hash.encode())  # هر دو bytes
+        return bcrypt.checkpw(otp.encode(), otp_hash.encode())  # هر دو به صورت بایت
 
 
 
@@ -90,37 +89,37 @@ class OTPService:
     @staticmethod
     def send_otp_via_email(email, otp_code):
         # ارسال کد OTP به ایمیل
-        subject = 'Your OTP Code'
-        message = f'Your OTP code is: {otp_code}'
-        from_email = 'your_email@example.com'  # آدرس ایمیل خود را وارد کن
+        subject = 'کد تایید شما'
+        message = f'کد تایید شما: {otp_code}'
+        from_email = 'your_email@example.com'  # آدرس ایمیل خود را وارد کنید
         try:
             send_mail(subject, message, from_email, [email])
-            return True , "code send check your email"
+            return True , "کد ارسال شد. ایمیل خود را چک کنید."
         except Exception as e:
-            return False, 'Failed to send OTP: {str(e)}'
+            return False, f'ارسال OTP با خطا مواجه شد: {str(e)}'
 
 
     @staticmethod
     def verify_otp(request, user_input_otp):
         session = request.session.get('user')
         if not session:
-            return False, "Session expired or not found."
+            return False, "سشن منقضی شده یا یافت نشد."
 
         now = time.time()
         otp_timestamp = session.get('otp_timestamp')
         if not otp_timestamp or now - otp_timestamp > OTPService.OTP_EXPIRE_SECONDS:
-            return False, "OTP has expired. Please request a new one."
+            return False, "کد تایید منقضی شده است. لطفاً کد جدید درخواست کنید."
         # مدیریت ریست تعداد تلاش‌ها
         if 'otp_attempt_time' in session and now - session['otp_attempt_time'] > OTPService.ATTEMPT_RESET_SECONDS:
             session['otp_attempts'] = 0
             session['otp_attempt_time'] = now
 
         if session.get('otp_attempts', 0) >= OTPService.MAX_ATTEMPTS:
-            return False, "Too many attempts. Try again 5 minuts later."
+            return False, "تعداد تلاش‌ها بیش از حد مجاز است. لطفاً بعد از ۵ دقیقه دوباره امتحان کنید."
 
         stored_hashed_otp = session.get('otp')
         if not stored_hashed_otp:
-            return False, "OTP not found in session."
+            return False, "کد تایید در سشن یافت نشد."
 
         # تایید OTP وارد شده
         if OTPManager.verify_otp(user_input_otp, stored_hashed_otp):
@@ -129,13 +128,13 @@ class OTPService:
             del session['otp_timestamp']
             session['otp_attempts'] = 0
             request.session.modified = True
-            return True, "OTP verified successfully."
+            return True, "کد تایید با موفقیت تایید شد."
         else:
             session['otp_attempts'] = session.get('otp_attempts', 0) + 1
             session['otp_attempt_time'] = now
             request.session['user'] = session
             request.session.modified = True
-            return False, "Invalid OTP."
+            return False, "کد تایید نامعتبر است."
         
 
 
@@ -143,11 +142,11 @@ class OTPService:
     def resend_otp(request):
         session = request.session.get('user')
         if not session:
-            return False, "Session not found. Please start the verification process again."
+            return False, "سشن یافت نشد. لطفاً فرایند تایید را از ابتدا شروع کنید."
 
         email = session.get('email')
         if not email:
-            return False, "Email not found in session."
+            return False, "ایمیل در سشن یافت نشد."
 
         # بررسی زمان ریست تلاش‌ها
         now = time.time()
@@ -159,11 +158,11 @@ class OTPService:
         # بررسی محدودیت زمانی برای ارسال دوباره
         last_sent_time = session.get('otp_timestamp', 0)
         if now - last_sent_time < 120:  # تغییر زمان به 60 ثانیه
-            return False, "Please wait a minute before requesting another OTP."
+            return False, "لطفاً یک دقیقه صبر کنید و سپس دوباره درخواست کنید."
 
         # بررسی تعداد تلاش‌ها
         if session.get('otp_attempts', 0) >= OTPService.MAX_ATTEMPTS:
-            return False, "You have reached the maximum number of OTP requests. Please try again 5 minuest later."
+            return False, "شما به حداکثر تعداد درخواست‌های OTP رسیدید. لطفاً بعد از ۵ دقیقه دوباره تلاش کنید."
 
         # افزایش تعداد تلاش‌ها
         session['otp_attempts'] = session.get('otp_attempts', 0) + 1
@@ -182,9 +181,6 @@ class OTPService:
         try:
             OTPService.send_otp_via_email(email, code)
         except Exception as e:
-            return False, f"Failed to send OTP: {str(e)}"
+            return False, f"ارسال OTP با خطا مواجه شد: {str(e)}"
 
-        return True, "A new OTP has been sent to your email."
-
-
-
+        return True, "یک OTP جدید به ایمیل شما ارسال شد."

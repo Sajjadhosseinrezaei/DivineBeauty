@@ -1,5 +1,3 @@
-// اسکریپت فروشگاه آنلاین گلبرگ
-
 document.addEventListener('DOMContentLoaded', function() {
     // نوار ناوبری چسبنده
     const navbar = document.querySelector('.navbar');
@@ -146,41 +144,33 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(style);
 });
 
-
-
-document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function(el) {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-  
-      const submenu = this.nextElementSibling;
-      document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(menu => {
-        if (menu !== submenu) {
-          menu.classList.remove('show');
-        }
-      });
-  
-      submenu.classList.toggle('show');
-    });
-  });
-  
-
-
-  document.addEventListener('DOMContentLoaded', function () {
-    // فعال‌سازی زیرمنوها در حالت هاور
+// فعال‌سازی زیرمنوها در حالت هاور و کلیک
+document.addEventListener('DOMContentLoaded', function () {
     const submenus = document.querySelectorAll('.dropdown-submenu');
 
     submenus.forEach(function (submenu) {
         const trigger = submenu.querySelector('.dropdown-toggle');
+
+        // زیرمنو را در هاور فعال کن
         trigger.addEventListener('mouseenter', function () {
             closeAllSubmenus(submenu);
             const dropdown = submenu.querySelector('.dropdown-menu');
             if (dropdown) dropdown.style.display = 'block';
         });
 
+        // زیرمنو را در هاور غیرفعال کن
         submenu.addEventListener('mouseleave', function () {
             const dropdown = submenu.querySelector('.dropdown-menu');
             if (dropdown) dropdown.style.display = 'none';
+        });
+
+        // کلیک روی لینک ها برای رفتن به URL
+        trigger.addEventListener('click', function (e) {
+            if (!submenu.querySelector('.dropdown-menu').classList.contains('show')) {
+                // این بخش از کد که باعث نمایش زیرمنو می‌شود
+                submenu.querySelector('.dropdown-menu').classList.toggle('show');
+            }
+            // اینجا هیچگونه جلوگیری از انتقال به URL انجام نمی‌دهیم
         });
     });
 
@@ -193,30 +183,12 @@ document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function
     }
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const submenus = document.querySelectorAll(".dropdown-submenu");
-
-    submenus.forEach(function (submenu) {
-        let timer;
-
-        submenu.addEventListener("mouseenter", function () {
-            clearTimeout(timer);
-            submenu.querySelector(".dropdown-menu").style.display = "block";
-        });
-
-        submenu.addEventListener("mouseleave", function () {
-            timer = setTimeout(() => {
-                submenu.querySelector(".dropdown-menu").style.display = "none";
-            }, 200); // 200 میلی‌ثانیه تاخیر برای جلوگیری از ناپدید شدن سریع
-        });
-    });
-});
-
+// موبایل - کلیک برای باز کردن زیرمنو
 document.addEventListener('DOMContentLoaded', function () {
     if (window.innerWidth <= 992) {
         document.querySelectorAll('.dropdown-submenu > .dropdown-toggle').forEach(function (el) {
             el.addEventListener('click', function (e) {
-                e.preventDefault();
+                e.preventDefault(); // جلوگیری از حرکت به لینک فقط زمانی که زیرمنو باز است
                 const parent = this.parentElement;
                 parent.classList.toggle('show');
             });

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="d-flex" method="get" action="{% url 'home:search_product' %}">
+    <input class="form-control me-2" type="search" placeholder="جستجوی محصولات..." name="search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">جستجو</button>
+  </form>
+  
+<section class="products-section py-5">
+    <div class="container">
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="product-card">
+                    <a class="product-image" href="{% url "products:product_detail" product.slug %}">
+                        {% if product.main_image %}
+                        <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="img-fluid">
+                        {% endif %}
+                        {% if product.label %}
+                            {% for label in product.label.all %}
+                                <div class="product-tag">{{ label }}</div>
+                            {% endfor %}
+                            {% endif %}
+                    </a>
+                    <div class="product-info">
+                        <a href="{% url "products:product_detail" product.slug %}">
+                            <h3>{{ product.name }}</h3>
+                        </a>
+                        <div class="product-price">
+                            <span class="price">{{ product.price }} تومان</span>
+                        </div>
+                        <button class="btn add-to-cart">افزودن به سبد</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+        </div>
+        <div class="container">
+            <!-- صفحه‌بندی -->
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <!-- لینک صفحه قبلی -->
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo; قبلی</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo; قبلی</span>
+                            </li>
+                        {% endif %}
+    
+                        <!-- شماره صفحات -->
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+    
+                        <!-- لینک صفحه بعدی -->
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">بعدی &raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">بعدی &raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock content %}

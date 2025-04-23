@@ -1,91 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Email</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #333;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 20px;
-        }
-        ul li {
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        ul li.success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        ul li.error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        input[type="email"], input[type="submit"] {
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            border: none;
-        }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تأیید ایمیل</title>
+  <style>
+    :root {
+      --primary-color: #ff6b9d;
+      --primary-dark: #e45a8a;
+      --secondary-color: #9c27b0;
+      --accent-color: #f8c300;
+      --light-color: #fff9fb;
+      --dark-color: #333;
+      --gray-color: #f5f5f5;
+      --border-color: #eeeeee;
+      --shadow-color: rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      font-family: "Vazir", sans-serif;
+      background-color: var(--light-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      direction: rtl;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px var(--shadow-color);
+      width: 90%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid var(--border-color);
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: var(--dark-color);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    ul li {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    ul li.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    ul li.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    input[type="email"],
+    input[type="submit"] {
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    input[type="email"] {
+      background-color: var(--gray-color);
+    }
+
+    input[type="submit"] {
+      background-color: var(--primary-color);
+      color: white;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .text-center {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Verify Your Email</h1>
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+  <div class="container">
+    <h1>تأیید ایمیل</h1>
 
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Send Verification Code">
-        </form>
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="ارسال کد تأیید" />
+    </form>
+
+    <div class="text-center">
+      <a href="{% url 'accounts:login' %}" class="btn">
+        حساب کاربری دارید؟ کلیک کنید
+      </a>
     </div>
+    <div class="text-center">
+        <a href="{% url 'home:home' %}" class="btn" style="margin-top: 10px;">
+          بازگشت به خانه
+        </a>
+      </div>
+      
+  </div>
+  
 </body>
 </html>

@@ -17,6 +17,24 @@ class ProductListView(ListView):
         context['categories'] = Category.objects.filter(parent=None)
         return context
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_slug = self.kwargs.get('slug')
+        if category_slug:
+            try:
+                category = Category.objects.get(slug=category_slug)
+                descendants = category.get_descendants(include_self=True)
+                queryset = queryset.filter(category__in=descendants)
+            except Category.DoesNotExist:
+                queryset = queryset.none()
+        return queryset
+    
+
+
+
+    
+        
+
 
 class ProductDetailView(DetailView):
     template_name = 'products/product_detail.html'

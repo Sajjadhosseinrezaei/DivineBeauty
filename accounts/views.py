@@ -10,8 +10,8 @@ from django.contrib import messages
 from utility import redirect_with_next, OTPService
 from django.contrib.auth.hashers import make_password
 import time
-# Create your views here.
 
+# Create your views here.
 
 class UserEmailVerificationView(View):
     form_class = EmailForm
@@ -19,7 +19,7 @@ class UserEmailVerificationView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            messages.info(request, 'You are already logged in.')
+            messages.info(request, 'شما قبلاً وارد شده‌اید.')
             return redirect('home:home')
         return super().dispatch(request, *args, **kwargs)
     
@@ -36,7 +36,7 @@ class UserEmailVerificationView(View):
 
             # بررسی وجود ایمیل بدون حساسیت به حروف بزرگ و کوچک
             if CustomUser.objects.filter(email__iexact=email).exists():
-                messages.error(request, 'Email already exists.')
+                messages.error(request, 'ایمیل قبلاً ثبت شده است.')
                 return redirect('accounts:email_verify')
 
             # ساخت ساختار session به صورت امن
@@ -68,7 +68,7 @@ class UserOtpVerificationView(View):
     
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            messages.info(request, 'You are already logged in first log out.')
+            messages.info(request, 'شما قبلاً وارد شده‌اید. ابتدا خارج شوید.')
             return redirect('home:home')
         return super().dispatch(request, *args, **kwargs)
     
@@ -107,7 +107,7 @@ class UserCreationView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            messages.info(request, 'You are already logged in first logout.')
+            messages.info(request, 'شما قبلاً وارد شده‌اید. ابتدا خارج شوید.')
             return redirect('home:home')
         return super().dispatch(request, *args, **kwargs)
  
@@ -122,13 +122,13 @@ class UserCreationView(View):
             email = form.cleaned_data['email']
             user = CustomUser.objects.filter(email=email)
             if user.exists():
-                messages.error(request, 'Email already exists.')
+                messages.error(request, 'ایمیل قبلاً ثبت شده است.')
                 return redirect('accounts:email_verify')
             password = form.cleaned_data['password1']
             user = CustomUser.objects.create_user(email=email, password=password)
             user.save()
             request.session.pop('user', None)
-            messages.success(request, "user created and login")
+            messages.success(request, "کاربر ایجاد شد و وارد شد.")
             user = authenticate(request, email=email, password=password)
             login(request, user)
             return redirect_with_next(request, default='home:home')
@@ -145,7 +145,7 @@ class UserLoginView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            messages.info(request, 'You are already logged in.')
+            messages.info(request, 'شما قبلاً وارد شده‌اید.')
             return redirect('home:home')
         return super().dispatch(request, *args, **kwargs)
     
@@ -161,14 +161,14 @@ class UserLoginView(View):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, 'Logged in successfully.')
+                messages.success(request, 'با موفقیت وارد شدید.')
                 return redirect_with_next(request, default='home:home')
             else:
-                messages.error(request, 'Invalid credentials.')
+                messages.error(request, 'اطلاعات وارد شده نادرست است.')
         return render(request, self.template_name, {'form': form})
     
 class UserLogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
-        messages.success(request, 'Logged out successfully.')
+        messages.success(request, 'با موفقیت خارج شدید.')
         return redirect('home:home')

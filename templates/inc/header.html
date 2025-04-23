@@ -14,19 +14,31 @@
                         <a class="nav-link active" aria-current="page" href="{% url "home:home" %}">خانه</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">محصولات</a>
+                        <a class="nav-link" href="{% url "products:product_list" %}">محصولات</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">درباره ما</a>
+                        <a class="nav-link" href="{% url "home:home" %}#about">درباره ما</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">تماس با ما</a>
+                        <a class="nav-link" href="{% url "home:home" %}#contact-info">تماس با ما</a>
                     </li>
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:logout' %}">خروج</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:email_verify' %}">ثبت نام / ورود</a>
+                    </li>
+                    {% endif %}
+                
                 </ul>
                 <div class="d-flex align-items-center">
                     <div class="search-box ms-3">
-                        <input type="text" class="form-control" placeholder="جستجو...">
-                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                        <form action="{% url "home:search_product" %}" method="get">
+                            <input type="text" name="search" class="form-control" placeholder="جستجو...">
+                            <button class="search-btn"><i class="fas fa-search"></i></button>
+                        </form>
                     </div>
                     <div class="cart-icon">
                         <a href="#" class="position-relative">
@@ -45,7 +57,7 @@
       <ul class="nav">
         {% for category in categories %}
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+          <a class="nav-link dropdown-toggle" href="{% url "products:product_list_by_category" category.slug %}" data-bs-toggle="dropdown">
             {{ category.name }}
           </a>
           {% if category.get_children %}

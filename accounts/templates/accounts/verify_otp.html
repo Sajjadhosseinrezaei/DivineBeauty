@@ -1,125 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify OTP</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #333;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 20px;
-        }
-        ul li {
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        ul li.success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        ul li.error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        input[type="text"], button {
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        button {
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            border: none;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .disabled-btn {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        .resend-section {
-            text-align: center;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تأیید حساب</title>
+  <style>
+    :root {
+      --primary-color: #ff6b9d;
+      --primary-dark: #e45a8a;
+      --gray-color: #f5f5f5;
+      --light-color: #fff;
+      --dark-color: #333;
+      --border-color: #ccc;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: 'Vazir', sans-serif;
+      background-color: var(--gray-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      direction: rtl;
+    }
+
+    .container {
+      background: var(--light-color);
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px var(--shadow-color);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: var(--dark-color);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 15px;
+    }
+
+    ul li {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    ul li.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    ul li.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px 0;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .disabled-btn {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .resend-section {
+      margin-top: 10px;
+    }
+
+    .nav-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .nav-buttons a,
+    .nav-buttons button {
+      flex: 1;
+      text-decoration: none;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Verify Your Account</h1>
+  <div class="container">
+    <h1>تأیید حساب کاربری</h1>
 
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
-        <!-- فرم تأیید OTP -->
-        <form method="post" action="">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Verify</button>
-        </form>
+    <!-- فرم تأیید OTP -->
+    <form method="post" action="">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">تأیید</button>
+    </form>
 
-        <div class="resend-section">
-            <form method="post" action="{% url 'accounts:resend_otp' %}">
-                {% csrf_token %}
-                {% comment %} <button id="resend-btn" type="submit" class="disabled-btn">Resend OTP (<span id="countdown">60</span>s)</button> {% endcomment %}
-            </form>
-        </div>
+    <!-- ارسال مجدد -->
+    <div class="resend-section">
+      <form method="post" action="{% url 'accounts:resend_otp' %}">
+        {% csrf_token %}
+        <button id="resend-btn" type="submit" class="disabled-btn" disabled>ارسال مجدد کد (<span id="countdown">60</span> ثانیه)</button>
+      </form>
     </div>
 
-    {% comment %} <script>
-        let countdown = 120;
-        const countdownElement = document.getElementById("countdown");
-        const resendBtn = document.getElementById("resend-btn");
+    <!-- دکمه‌های ناوبری -->
+    <div class="nav-buttons">
+      <a href="{% url "home:home" %}" class="home-btn">
+        <button type="button">بازگشت به خانه</button>
+      </a>
+      <a href="{% url "accounts:email_verify" %}">
+        <button>صفحه قبل</button>
+    </a>
+    </div>
+  </div>
 
-        const timer = setInterval(() => {
-            countdown--;
-            countdownElement.textContent = countdown;
+  <script>
+    let countdown = 60;
+    const countdownElement = document.getElementById("countdown");
+    const resendBtn = document.getElementById("resend-btn");
 
-            if (countdown <= 0) {
-                clearInterval(timer);
-                resendBtn.classList.remove("disabled-btn");
-                resendBtn.textContent = "Resend OTP";
-            }
-        }, 1000);
-    </script> {% endcomment %}
+    const timer = setInterval(() => {
+      countdown--;
+      countdownElement.textContent = countdown;
+
+      if (countdown <= 0) {
+        clearInterval(timer);
+        resendBtn.classList.remove("disabled-btn");
+        resendBtn.disabled = false;
+        resendBtn.textContent = "ارسال مجدد کد";
+      }
+    }, 1000);
+  </script>
 </body>
 </html>

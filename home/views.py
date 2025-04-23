@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from products.models import Product, Category
+from django.views.generic import ListView
 
 # Create your views here.
 class HomeView(View):
@@ -14,3 +15,16 @@ class HomeView(View):
         return render(request, self.template_name, {'products':products, 'categories':categories})
 
 
+class SearchProductView(ListView):
+    template_name = 'home/search.html'
+    context_object_name = 'products'
+    paginate_by = 10  # تعداد محصولات در هر صفحه
+    model = Product
+
+    def get_queryset(self):
+        search_query = self.request.GET.get('search')
+        if search_query:
+            return Product.objects.filter(name__icontains=search_query)
+        return Product.objects.none()
+
+    

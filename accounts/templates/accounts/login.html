@@ -1,78 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>ورود</title>
     <style>
+        :root {
+            --primary-color: #ff6b9d;
+            --primary-dark: #e45a8a;
+            --secondary-color: #9c27b0;
+            --accent-color: #f8c300;
+            --light-color: #fff9fb;
+            --dark-color: #333;
+            --gray-color: #f5f5f5;
+            --border-color: #eeeeee;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+    
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Vazir', sans-serif;
+            background-color: var(--gray-color);
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            direction: rtl;
         }
+    
         .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            background: var(--light-color);
+            padding: 30px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            width: 90%;
             max-width: 400px;
         }
+    
         h1 {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: center;
-            color: #333;
+            color: var(--dark-color);
         }
+    
         ul {
             list-style: none;
             padding: 0;
             margin-bottom: 20px;
         }
+    
         ul li {
             padding: 10px;
             border-radius: 4px;
             margin-bottom: 10px;
             font-size: 14px;
         }
+    
         ul li.success {
             background-color: #d4edda;
             color: #155724;
         }
+    
         ul li.error {
             background-color: #f8d7da;
             color: #721c24;
         }
+    
         form {
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
-        input[type="text"], input[type="password"], button {
-            padding: 10px;
+    
+        input[type="text"], input[type="password"] {
+            padding: 12px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 15px;
+            width: 100%;
+            max-width: 320px;
+            box-sizing: border-box;
         }
+    
         button {
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            width: 100%;
+            max-width: 320px;
             border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
+    
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--primary-dark);
         }
+    
+        .links {
+            text-align: center;
+            margin-top: 15px;
+        }
+    
+        .btn-outline {
+            display: inline-block;
+            padding: 10px 16px;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 6px;
+            transition: 0.3s ease;
+        }
+    
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 320px;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--dark-color);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        
     </style>
+    
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
+        <h1>ورود به حساب</h1>
+
         {% if messages %}
             <ul>
                 {% for message in messages %}
@@ -80,14 +161,34 @@
                 {% endfor %}
             </ul>
         {% endif %}
+
         <form action="" method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
+            
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+        
+            <div class="form-group">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                {{ form.password.errors }}
+            </div>
+        
             {% if request.GET.next %}
                 <input type="hidden" name="next" value="{{ request.GET.next }}">
             {% endif %}
+        
+            <button type="submit">ورود</button>
         </form>
+        
+
+        <div class="links">
+            <a href="{% url 'accounts:email_verify' %}" class="btn-outline">حساب ندارید؟ ثبت‌نام کنید</a>
+            <a href="{% url 'home:home' %}" class="btn-outline">بازگشت به خانه</a>
+        </div>
     </div>
 </body>
 </html>

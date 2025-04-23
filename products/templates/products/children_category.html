@@ -3,7 +3,7 @@
     {% for node in nodes %}
     <li class="dropdown-submenu"> <!-- این کلاس رو برای تشخیص زیرمنو استفاده می‌کنیم -->
         <a class="dropdown-item{% if node.get_children %} dropdown-toggle{% endif %}"
-        href="http://127.0.0.1:8000/products/">
+        href="{% url "products:product_list_by_category" node.slug %}">
            {{ node.name }}
         </a>
         {% if node.get_children %}
