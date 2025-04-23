@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJwT0C8JbZdbLg6K8t13ZtV1PfDdX6J6Q1iZlG4rGdV7s6p22Xw9wr6t30gB" crossorigin="anonymous">
+
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
@@ -20,6 +22,8 @@
     {% block content %}{% endblock content %}
     {% include "inc/footer.html" %}
     <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0ppU5JftP3pX3rF0z6D6jjNDRr1bDY0p1ewdIyk8YVXkImfD" crossorigin="anonymous"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JavaScript -->
     <script src="{% static 'js/base.js' %}"></script>

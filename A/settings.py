@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'products_api.apps.ProductsApiConfig',
 
     # thireid party apps
-    'rest_framework'
+    'rest_framework',
+    'mptt',
 ]
 
 MIDDLEWARE = [

@@ -9,8 +9,8 @@ class HomeView(View):
 
 
     def get(self, request):
-        catehories = Category.objects.filter(parent=None)
+        categories = Category.objects.filter(parent=None)
         products = Product.objects.filter(label__name='ویژه').order_by('-created_at')
-        return render(request, self.template_name, {'products':products, 'categories':catehories})
+        return render(request, self.template_name, {'products':products, 'categories':categories})
 
 
