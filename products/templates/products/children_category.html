@@ -1,0 +1,15 @@
+{% if nodes %}
+<ul class="dropdown-menu">
+    {% for node in nodes %}
+    <li class="dropdown-submenu"> <!-- این کلاس رو برای تشخیص زیرمنو استفاده می‌کنیم -->
+        <a class="dropdown-item{% if node.get_children %} dropdown-toggle{% endif %}"
+        href="http://127.0.0.1:8000/products/">
+           {{ node.name }}
+        </a>
+        {% if node.get_children %}
+            {% include "products/children_category.html" with nodes=node.get_children %}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}

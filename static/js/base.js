@@ -145,3 +145,81 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
 });
+
+
+
+document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+  
+      const submenu = this.nextElementSibling;
+      document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(menu => {
+        if (menu !== submenu) {
+          menu.classList.remove('show');
+        }
+      });
+  
+      submenu.classList.toggle('show');
+    });
+  });
+  
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // فعال‌سازی زیرمنوها در حالت هاور
+    const submenus = document.querySelectorAll('.dropdown-submenu');
+
+    submenus.forEach(function (submenu) {
+        const trigger = submenu.querySelector('.dropdown-toggle');
+        trigger.addEventListener('mouseenter', function () {
+            closeAllSubmenus(submenu);
+            const dropdown = submenu.querySelector('.dropdown-menu');
+            if (dropdown) dropdown.style.display = 'block';
+        });
+
+        submenu.addEventListener('mouseleave', function () {
+            const dropdown = submenu.querySelector('.dropdown-menu');
+            if (dropdown) dropdown.style.display = 'none';
+        });
+    });
+
+    function closeAllSubmenus(current) {
+        document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(menu => {
+            if (!current.contains(menu)) {
+                menu.style.display = 'none';
+            }
+        });
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const submenus = document.querySelectorAll(".dropdown-submenu");
+
+    submenus.forEach(function (submenu) {
+        let timer;
+
+        submenu.addEventListener("mouseenter", function () {
+            clearTimeout(timer);
+            submenu.querySelector(".dropdown-menu").style.display = "block";
+        });
+
+        submenu.addEventListener("mouseleave", function () {
+            timer = setTimeout(() => {
+                submenu.querySelector(".dropdown-menu").style.display = "none";
+            }, 200); // 200 میلی‌ثانیه تاخیر برای جلوگیری از ناپدید شدن سریع
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.innerWidth <= 992) {
+        document.querySelectorAll('.dropdown-submenu > .dropdown-toggle').forEach(function (el) {
+            el.addEventListener('click', function (e) {
+                e.preventDefault();
+                const parent = this.parentElement;
+                parent.classList.toggle('show');
+            });
+        });
+    }
+});

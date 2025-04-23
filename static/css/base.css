@@ -168,6 +168,31 @@ a:hover {
   justify-content: center;
 }
 
+
+
+/* ==================== category session==================== */
+/* مکان قرارگیری زیرمنوها */
+/* برای نمایش زیرمنوها به‌صورت عمودی زیر آیتم والد */
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+  display: block;
+  position: absolute;
+  top: 100%;      /* یعنی پایین‌تر از آیتم والد */
+  left: 0;        /* هم‌راستا با آیتم والد */
+  right: 10%;
+  margin-top: 0.1rem;
+  z-index: 1000;
+}
+
+/* نمایش زیرمنو در حالت هاور */
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+
+
 /* ==================== HERO SECTION ==================== */
 .hero-section {
   position: relative;

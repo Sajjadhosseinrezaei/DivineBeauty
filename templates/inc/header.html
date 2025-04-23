@@ -17,9 +17,6 @@
                         <a class="nav-link" href="#">محصولات</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">دسته‌بندی‌ها</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#about">درباره ما</a>
                     </li>
                     <li class="nav-item">
@@ -42,3 +39,23 @@
         </div>
     </nav>
 </header>
+<br><br>
+<section class="category-menu bg-light py-2">
+    <div class="container">
+      <ul class="nav">
+        {% for category in categories %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            {{ category.name }}
+          </a>
+          {% if category.get_children %}
+            {% include "products/children_category.html" with nodes=category.get_children %}
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+</section>
+<br><br>
+  
+  
