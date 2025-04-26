@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'home/profile.css' %}">
+{% endblock style %}
+
+{% block content %}
+<section class="profile-section" style="padding: 50px 0; background-color: #f8f9fa;">
+    <div class="container">
+        <div class="card mx-auto" style="max-width: 700px; border: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <div class="card-body text-center">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'accounts/images/default-profile.png' %}" alt="Default Profile" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                {% endif %}
+                {% if profile.user.first_name %}
+                    <h3 class="card-title">{{ profile.user.first_name }} {{ profile.user.last_name }}</h3>
+                {% else %}
+                    <h3 class="card-title">بدون نام</h3>
+                {% endif %}
+                
+                {% if profile.bio %}
+                    <p class="card-text mt-3">{{ profile.bio }}</p>
+                {% endif %}
+
+                <ul class="list-group list-group-flush text-start mt-4">
+                    {% if profile.location %}
+                        <li class="list-group-item"><strong>مکان:</strong> {{ profile.location }}</li>
+                    {% endif %}
+                    {% if profile.website %}
+                        <li class="list-group-item"><strong>وبسایت:</strong> <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a></li>
+                    {% endif %}
+                    <li class="list-group-item"><strong>ایمیل:</strong> {{ profile.user.email }}</li>
+                </ul>
+
+                <div class="mt-4 d-flex justify-content-center gap-3">
+                    <a href="#" class="btn btn-danger">ویرایش پروفایل</a>
+                </div>
+
+                <!-- بخش سبد خرید -->
+                <div class="mt-5">
+                    <h4 class="mb-4" style="color: #ff69b4;">🛒 سبد خرید شما</h4>
+
+                    {% if cart_items %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered" style="background-color: white;">
+                                <thead class="table-pink" style="background-color: #ffe4ec;">
+                                    <tr>
+                                        <th>محصول</th>
+                                        <th>تعداد</th>
+                                        <th>قیمت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in cart_items %}
+                                    <tr>
+                                        <td>{{ item.product.name }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ item.get_total_price }} تومان</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">سبد خرید شما خالی است.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

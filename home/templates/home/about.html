@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'home/about.css' %}">
+{% endblock style %}
+
+{% block content %}
+<section class="about-section">
+    <div class="container text-center">
+        <img src="{% static 'home/images/aboutBanner.png' %}" alt="درباره گلبرگ" class="mb-4" style="max-width: 100%; height: auto;">
+        <h2>درباره گلبرگ</h2>
+        <p>
+            فروشگاه گلبرگ با بیش از ۱۰ سال سابقه در زمینه فروش محصولات آرایشی و بهداشتی اصل و با کیفیت،
+            یکی از معتبرترین فروشگاه‌های آنلاین در ایران است. ما افتخار می‌کنیم که همواره رضایت مشتریان را در اولویت قرار داده‌ایم.
+        </p>
+        <p>
+            تمامی محصولات ما دارای ضمانت اصالت کالا هستند و با بهترین قیمت ارائه می‌شوند.
+            همچنین ارسال سریع محصولات به سراسر کشور از دیگر خدمات ما به مشتریان عزیز است.
+        </p>
+    </div>
+</section>
+
+<section class="contact-section" style="background-color: #fff0f6; padding: 50px 0;">
+    <div class="container text-center">
+        <h2 class="text-danger mb-4">تماس با ما</h2>
+        <p class="mb-4 text-secondary">
+            اگر سوالی دارید یا نیاز به پشتیبانی دارید، خوشحال می‌شویم با ما در تماس باشید.
+        </p>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="contact-info mb-4">
+                    <p><strong>آدرس:</strong> تهران، خیابان مثال، کوچه نمونه، پلاک ۱۲۳</p>
+                    <p><strong>تلفن:</strong> ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                    <p><strong>ایمیل:</strong> info@golbarg.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

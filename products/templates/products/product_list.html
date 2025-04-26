@@ -1,6 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-
+{% if categories %}
+<section class="category-menu bg-light py-2" id="category">
+    <div class="container">
+      <ul class="nav">
+        {% for category in categories %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="{% url "products:product_list_by_category" category.slug %}" data-bs-toggle="dropdown">
+            {{ category.name }}
+          </a>
+          {% if category.get_children %}
+            {% include "products/children_category.html" with nodes=category.get_children %}
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+</section>
+<br><br>
+{% endif %}
  <!-- Special Products Section -->
  <section class="products-section py-5">
     <div class="container">

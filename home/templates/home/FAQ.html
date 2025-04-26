@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'home/FAQ.css' %}">
+<style>
+    body {
+        direction: rtl;
+        text-align: right;
+    }
+    .accordion-button::after {
+        margin-left: auto;
+        margin-right: 0;
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+<section style="background-color: #fff0f6; padding: 40px 0; min-height: 100vh;">
+    <div class="container">
+
+        <!-- فیلتر دسته‌بندی -->
+        <form method="get" class="row g-2 mb-5">
+            <div class="col-md-10">
+                <select name="category" class="form-select">
+                    <option value="">همه دسته‌ها</option>
+                    {% for category in categories_fqa %}
+                        <option value="{{ category.slug }}" {% if category.slug == selected %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-danger w-100">فیلتر</button>
+            </div>
+        </form>
+
+        <!-- عنوان اصلی -->
+        <h1 class="mb-4 text-center text-danger">پرسش‌های متداول</h1>
+
+        <!-- نمایش دسته‌بندی‌ها و سوالات -->
+        {% for category in categories_fqa %}
+            <h4 class="mt-4 text-secondary">{{ category.name }}</h4>
+            <div class="accordion" id="accordion-{{ forloop.counter }}">
+                {% for faq in category.faqs.all %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{ faq.id }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ faq.id }}">
+                                {{ faq.question }}
+                            </button>
+                        </h2>
+                        <div id="collapse-{{ faq.id }}" class="accordion-collapse collapse" data-bs-parent="#accordion-{{ forloop.parentloop.counter }}">
+                            <div class="accordion-body">
+                                {{ faq.answer|linebreaks }}
+                                <div class="text-muted small mt-2">آخرین بروزرسانی: {{ faq.updated_at|date:"Y/m/d H:i" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% empty %}
+            <p class="text-center text-muted mt-5">هیچ پرسشی برای نمایش وجود ندارد.</p>
+        {% endfor %}
+
+    </div>
+</section>
+{% endblock content %}

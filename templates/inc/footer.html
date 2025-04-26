@@ -16,12 +16,10 @@
                 <div class="col-md-4 mb-4 mb-md-0">
                     <h5>لینک‌های سریع</h5>
                     <ul class="footer-links">
-                        <li><a href="#">خانه</a></li>
-                        <li><a href="#">محصولات</a></li>
-                        <li><a href="#">دسته‌بندی‌ها</a></li>
-                        <li><a href="#">درباره ما</a></li>
-                        <li><a href="#">تماس با ما</a></li>
-                        <li><a href="#">سوالات متداول</a></li>
+                        <li><a href="{% url "home:home" %}">خانه</a></li>
+                        <li><a href="{% url "products:product_list" %}">محصولات</a></li>                        <li><a href="{% url "home:about" %}">درباره ما</a></li>
+                        <li><a href="{% url "home:about" %}">تماس با ما</a></li>
+                        <li><a href="{% url "home:faq" %}">سوالات متداول</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">

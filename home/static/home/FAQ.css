@@ -1,0 +1,20 @@
+body {
+    background-color: #ffe6f0; /* صورتی خیلی ملایم */
+    font-family: 'Vazir', sans-serif;
+}
+h1, h4 {
+    color: #d63384;
+}
+.accordion-button:not(.collapsed) {
+    background-color: #f8d7e9;
+    color: #b3005c;
+}
+.accordion-button:focus {
+    box-shadow: none;
+}
+.accordion-body {
+    background-color: #fff0f6;
+}
+.container {
+    max-width: 800px;
+}

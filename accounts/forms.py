@@ -18,8 +18,8 @@ class UserCreationForm(BaseUserCreationForm):
             'phone_number': 'شماره تلفن',
             'date_of_birth': 'تاریخ تولد',
             'email': 'ایمیل',
-            'password1': 'گذرواژه',
-            'password2': 'تأیید گذرواژه'
+            'password1*': '*گذرواژه',
+            'password2*': '*تأیید گذرواژه'
         }
         help_texts = {
             'first_name': 'لطفاً نام خود را وارد کنید.',

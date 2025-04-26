@@ -5,6 +5,11 @@
             <a class="navbar-brand" href="{% url "home:home" %}">
                 <img src="https://cdn-icons-png.freepik.com/256/1714/1714739.png?uid=R197063715&ga=GA1.1.138319502.1745300049&semt=ais_hybrid" alt="لوگوی گلبرگ" class="logo">
             </a>
+            <a href="{% url 'accounts:profile' %}" class="btn btn-pink d-inline-flex align-items-center">
+                <i class="bi bi-person-circle me-2"></i> پروفایل من
+            </a>
+            
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -17,10 +22,10 @@
                         <a class="nav-link" href="{% url "products:product_list" %}">محصولات</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url "home:home" %}#about">درباره ما</a>
+                        <a class="nav-link" href="{% url "home:about" %}">درباره ما</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url "home:home" %}#contact-info">تماس با ما</a>
+                        <a class="nav-link" href="{% url "home:about" %}">تماس با ما</a>
                     </li>
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
@@ -51,23 +56,5 @@
         </div>
     </nav>
 </header>
-<br><br>
-<section class="category-menu bg-light py-2">
-    <div class="container">
-      <ul class="nav">
-        {% for category in categories %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="{% url "products:product_list_by_category" category.slug %}" data-bs-toggle="dropdown">
-            {{ category.name }}
-          </a>
-          {% if category.get_children %}
-            {% include "products/children_category.html" with nodes=category.get_children %}
-          {% endif %}
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-</section>
-<br><br>
-  
+
   

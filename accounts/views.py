@@ -1,15 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views import View
 from django.contrib.auth import login, authenticate, logout
-from .models import CustomUser
+from .models import CustomUser, UserProfile
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import UserCreationForm, UserLoginForm, OtpForm, EmailForm
 from django.contrib import messages
 from utility import redirect_with_next, OTPService
 from django.contrib.auth.hashers import make_password
 import time
+import secrets
+from django.utils import timezone
 
 # Create your views here.
 
@@ -82,6 +84,8 @@ class UserOtpVerificationView(View):
         if form.is_valid():
             success , message = OTPService.verify_otp(request, form.cleaned_data['otp'])
             if success:
+                request.session['registration_token'] = secrets.token_urlsafe(16)
+                request.session['registration_token_created_at'] = timezone.now().isoformat()
                 messages.success(request, message)
                 return redirect('accounts:register')
             else:
@@ -106,16 +110,28 @@ class UserCreationView(View):
     form_class = UserCreationForm
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            messages.info(request, 'شما قبلاً وارد شده‌اید. ابتدا خارج شوید.')
+        registration_token = request.session.get('registration_token')
+        token_created_at = request.session.get('registration_token_created_at')
+
+        if not registration_token or not token_created_at:
+            messages.error(request, 'دسترسی مستقیم به ثبت‌نام مجاز نیست.')
             return redirect('home:home')
+
+        # اعتبار زمانی توکن (مثلا 15 دقیقه)
+        created_time = timezone.datetime.fromisoformat(token_created_at)
+        if timezone.now() - created_time > timezone.timedelta(minutes=15):
+            messages.error(request, 'مدت زمان ثبت‌نام شما به پایان رسید.')
+            request.session.pop('registration_token', None)
+            request.session.pop('registration_token_created_at', None)
+            return redirect('accounts:email_verify')
+
         return super().dispatch(request, *args, **kwargs)
- 
+
     def get(self, request):
         email = request.session['user']['email']
-        form = self.form_class(initial={'email':email})
+        form = self.form_class(initial={'email': email})
         return render(request, self.template_name, {'form': form})
-    
+
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
@@ -124,17 +140,22 @@ class UserCreationView(View):
             if user.exists():
                 messages.error(request, 'ایمیل قبلاً ثبت شده است.')
                 return redirect('accounts:email_verify')
+
             password = form.cleaned_data['password1']
             user = CustomUser.objects.create_user(email=email, password=password)
             user.save()
+
+            # پاک کردن session بعد از ثبت موفق
             request.session.pop('user', None)
-            messages.success(request, "کاربر ایجاد شد و وارد شد.")
-            user = authenticate(request, email=email, password=password)
+            request.session.pop('registration_token', None)
+            request.session.pop('registration_token_created_at', None)
+
+            messages.success(request, "ثبت‌نام با موفقیت انجام شد!")
             login(request, user)
-            return redirect_with_next(request, default='home:home')
-        
-        return render(request, self.template_name, {'form':form})
-        
+            return redirect('home:home')
+
+        return render(request, self.template_name, {'form': form})
+
         
 
     
@@ -172,3 +193,13 @@ class UserLogoutView(LoginRequiredMixin, View):
         logout(request)
         messages.success(request, 'با موفقیت خارج شدید.')
         return redirect('home:home')
+    
+
+
+
+class UserProfileView(LoginRequiredMixin, View):
+    template_name = 'accounts/profile.html'
+
+    def get(self, request):
+        profile = get_object_or_404(UserProfile, user=self.request.user)
+        return render(request, self.template_name, {'profile': profile})
