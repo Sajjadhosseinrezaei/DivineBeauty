@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'products.apps.ProductsConfig',
     'products_api.apps.ProductsApiConfig',
-    'orders.apps.OrdersConfig',
+    'order.apps.OrderConfig',
 
     # thireid party apps
     'rest_framework',
