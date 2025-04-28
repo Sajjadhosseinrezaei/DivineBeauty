@@ -66,6 +66,7 @@ class Product(models.Model):
         if self.discount_price:
             return round((self.price - self.discount_price) / self.price * 100)
         return 0
+    
 
 
 

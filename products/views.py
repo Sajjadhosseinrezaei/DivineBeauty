@@ -46,5 +46,6 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-        context['product_attributes'] = product.attributes.items()
+        if product.attributes:
+            context['product_attributes'] = product.attributes.items()
         return context

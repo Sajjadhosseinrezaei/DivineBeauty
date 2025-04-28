@@ -29,7 +29,7 @@
                     <div class="product-card">
                         <div class="product-image">
                             {% if product.main_image %}
-                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="img-fluid">
+                            <a href="{% url "products:product_detail" product.slug %}"><img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="img-fluid"></a>
                             {% endif %}
                             {% if product.label %}
                                 {% for label in product.label.all %}

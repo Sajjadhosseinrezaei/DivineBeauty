@@ -1,0 +1,9 @@
+.table img {
+    object-fit: cover;
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+.btn-lg {
+    margin: 10px;
+}

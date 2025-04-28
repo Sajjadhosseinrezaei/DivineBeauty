@@ -3,6 +3,7 @@ from mptt.admin import DraggableMPTTAdmin
 from .models import Product, Brand, ProductLabel, Category, ProductImage
 from django_json_widget.widgets import JSONEditorWidget
 from django import forms
+from django.utils.text import slugify
 
 class ProductAdminForm(forms.ModelForm):
     class Meta:
@@ -28,8 +29,13 @@ class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'updated_at')
     filter_horizontal = ('label',)
 
+    def save_model(self, request, obj, form, change):
+        if not obj.slug:  # اگر اسلاگ خالی بود
+            obj.slug = slugify(obj.name, allow_unicode=True)
+        super().save_model(request, obj, form, change)
+
     fieldsets = (
-        (None, {'fields': ('name','description', 'main_image')}),
+        (None, {'fields': ('name','slug','description', 'main_image')}),
         ('قیمت‌گذاری', {'fields': ('price', 'discount_price')}),
         ('اطلاعات بیشتر', {'fields': ('skintype', 'expiration_date', 'usage_instructions')}),
         ('دسته‌بندی و برند', {'fields': ('category', 'brand', 'label')}),

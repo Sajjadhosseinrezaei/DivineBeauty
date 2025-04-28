@@ -64,11 +64,11 @@ class Cart(models.Model):
         if created:
             cart_item.price = product.get_final_price()
             cart_item.quantity = quantity
-            cart_item.save()
+            
         else:
             cart_item.quantity += quantity
             cart_item.price = product.get_final_price()
-            cart_item.save()
+        cart_item.save()
     
     def remove_empty_cart(self):
         if not self.items.exists():
@@ -93,6 +93,8 @@ class CartItem(models.Model):
         return self.price * self.quantity
     
     def update_cart_quantity(self, quantity):
+        if quantity < 1:
+            raise ValueError("تعداد نمی‌تواند کمتر از 1 باشد")
         if quantity <= self.product.stock:
             self.quantity = quantity
             self.save()

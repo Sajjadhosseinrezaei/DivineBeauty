@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'order/css/style.css' %}">
+{% endblock style %}
 {% block content %}
 <div class="container my-5">
     <h2 class="mb-4 text-center">سبد خرید شما</h2>
@@ -79,15 +81,4 @@
 </div>
 
 <!-- استایل‌های سفارشی (اختیاری) -->
-{% comment %} <style>
-    .table img {
-        object-fit: cover;
-    }
-    .table th, .table td {
-        vertical-align: middle;
-    }
-    .btn-lg {
-        margin: 10px;
-    } {% endcomment %}
-</style>
 {% endblock content %}
