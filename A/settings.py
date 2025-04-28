@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # thireid party apps
     'rest_framework',
     'mptt',
+    'django_json_widget',
 
 ]
 

@@ -1,9 +1,26 @@
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
 from .models import Product, Brand, ProductLabel, Category, ProductImage
+from django_json_widget.widgets import JSONEditorWidget
+from django import forms
+
+class ProductAdminForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+        widgets = {
+            'attributes': JSONEditorWidget(
+                options={
+                    'mode': 'tree',    # حالت گرافیکی درختی
+                    'modes': ['tree', 'code'],  # اجازه تغییر بین درخت و کد
+                }
+            )
+        }
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
+
     list_display = ('name','main_image', 'price', 'discount_price', 'brand', 'stock', 'is_available', 'created_at')
     list_filter = ('is_available', 'brand', 'category', 'skintype')
     search_fields = ('name', 'description')
