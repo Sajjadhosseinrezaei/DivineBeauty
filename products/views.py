@@ -42,4 +42,9 @@ class ProductDetailView(DetailView):
     model = Product
     slug_field = 'slug'  # نام فیلد اسلاگ در مدل
     slug_url_kwarg = 'slug'  # نام پارامتر URL که اسلاگ را دریافت می‌کند
-    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        context['product_attributes'] = product.attributes.items()
+        return context

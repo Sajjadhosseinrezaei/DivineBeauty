@@ -42,7 +42,11 @@
                             <div class="product-price">
                                 <span class="price">{{ product.price }} تومان</span>
                             </div>
-                            <button class="btn add-to-cart">افزودن به سبد</button>
+                            <form action="{% url 'order:add_cart' product.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <button type="submit" class="btn add-to-cart">افزودن به سبد</button>
+                            </form>    
                         </div>
                     </div>
                 </div>

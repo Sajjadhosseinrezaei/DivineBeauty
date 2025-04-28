@@ -46,9 +46,17 @@
                         </form>
                     </div>
                     <div class="cart-icon">
-                        <a href="#" class="position-relative">
+                        <a href="{% url "order:cart_detail" %}" class="position-relative">
                             <i class="fas fa-shopping-bag"></i>
-                            <span class="cart-counter">3</span>
+                            {% if total_cart_items > 0 %}
+                            <span class="cart-counter">
+                                {{total_cart_items}}
+                            </span>
+                            {% else %}
+                            <span class="cart-counter">
+                                0
+                            </span>
+                            {% endif %}
                         </a>
                     </div>
                 </div>

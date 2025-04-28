@@ -40,3 +40,64 @@ class OrderItem(models.Model):
 
     def cost(self):
         return self.price * self.quantity
+    
+
+
+from django.db import models
+from accounts.models import CustomUser
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='carts', verbose_name='سبد خرید')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='زمان ایجاد') 
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='زمان به‌روزرسانی')    
+
+    def __str__(self):
+        return f'Cart {self.id} for {self.user.email}'
+    
+    def get_total_price(self):
+        total = sum(item.cost() for item in self.items.all())
+        return total
+    
+    def add_to_cart(self, product, quantity=1):
+        cart_item , created = CartItem.objects.get_or_create(cart=self, product=product)
+        if created:
+            cart_item.price = product.get_final_price()
+            cart_item.quantity = quantity
+            cart_item.save()
+        else:
+            cart_item.quantity += quantity
+            cart_item.price = product.get_final_price()
+            cart_item.save()
+    
+    def remove_empty_cart(self):
+        if not self.items.exists():
+            self.delete()
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items', verbose_name='آیتم سبد خرید')
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, verbose_name='محصول')
+    quantity = models.PositiveIntegerField(default=1, verbose_name='تعداد')
+    price = models.DecimalField(max_digits=12, decimal_places=0, verbose_name='قیمت')  # قیمت محصول در زمان اضافه شدن به سبد خرید
+    
+    def __str__(self):
+        return f'{self.quantity} of {self.product.name} in Cart {self.cart.id}'
+    
+    def save(self, *args, **kwargs):
+        if self.price is None:
+            self.price = self.product.get_final_price()
+        return super().save(*args, **kwargs)
+    
+    def cost(self):
+        return self.price * self.quantity
+    
+    def update_cart_quantity(self, quantity):
+        if quantity <= self.product.stock:
+            self.quantity = quantity
+            self.save()
+        else:
+            raise ValueError("تعداد درخواستی بیشتر از موجودی است")
+
+    def del_cart_item(self):
+        self.delete()

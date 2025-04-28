@@ -56,7 +56,7 @@
                             <div class="meta-item">
                                 <div class="meta-label">موجودیت:</div>
                                 {% if product.stock %}
-                                <div class="meta-value"> {{prodoct.stock}}در انبار موجود است</div>
+                                <div class="meta-value"> {{product.stock}} عدد در انبار موجود است</div>
                                {% else %}
                                 <div class="meta-value">در انبار موجود نیست</div>
                                 {% endif %}
@@ -67,7 +67,7 @@
                                 <div class="meta-value">{{product.skintype}}</div>
                             </div>
                             {% endif %}
-                            {% for key , value in product.attributes %}
+                            {% for key , value in product_attributes %}
                             <div class="meta-item">
                                 <div class="meta-label">{{key}}:</div>
                                 <div class="meta-value">{{value}}</div>
