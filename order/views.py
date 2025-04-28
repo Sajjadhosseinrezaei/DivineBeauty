@@ -5,10 +5,11 @@ from .models import Cart, CartItem
 from django.contrib import messages
 from utility import redirect_with_next
 from django.core.exceptions import ValidationError
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 
-class AddCartItem(View):
+class AddCartItem(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         cart, created= Cart.objects.get_or_create(user=request.user)
         product = get_object_or_404(Product, id=kwargs['id'])
@@ -20,7 +21,7 @@ class AddCartItem(View):
 
 
 
-class RemoveCartItemView(View):
+class RemoveCartItemView(LoginRequiredMixin, View):
     
     def post(self,request, product_id):
         product = get_object_or_404(Product, id=product_id)
@@ -37,7 +38,7 @@ class RemoveCartItemView(View):
             return redirect('order:cart_detail')
         
 
-class UpdateCartQuantityView(View):
+class UpdateCartQuantityView(LoginRequiredMixin, View):
 
     def post(self, request, cart_item_id):
         cart_item = get_object_or_404(CartItem, id=cart_item_id)
