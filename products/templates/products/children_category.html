@@ -1,15 +1,12 @@
-{% if nodes %}
-<ul class="dropdown-menu">
-    {% for node in nodes %}
-    <li class="dropdown-submenu"> <!-- این کلاس رو برای تشخیص زیرمنو استفاده می‌کنیم -->
-        <a class="dropdown-item{% if node.get_children %} dropdown-toggle{% endif %}"
-        href="{% url "products:product_list_by_category" node.slug %}">
-           {{ node.name }}
-        </a>
-        {% if node.get_children %}
-            {% include "products/children_category.html" with nodes=node.get_children %}
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
+<li>
+    <a href="{% url 'products:product_list_by_category' category.slug %}">{{ category.name }}</a>
+  
+    {% if category.children.exists %}
+      <ul class="submenu">
+        {% for child in category.children.all %}
+          {% include "products/children_category.html" with category=child %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+</li>
+  
