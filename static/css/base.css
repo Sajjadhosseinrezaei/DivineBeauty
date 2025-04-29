@@ -906,3 +906,70 @@ a:hover {
     color: white;
     transform: translateY(-3px);
 }
+
+
+
+/* ==================== CATEGORIES FOR FOILTER PRODUCTS ==================== */
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .menu {
+    background-color: var(--primary-color);
+    display: flex;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px var(--shadow-color);
+  }
+
+  .menu > li {
+    position: relative;
+  }
+
+  .menu > li > a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+
+  .menu li:hover > a {
+    background-color: var(--primary-dark);
+  }
+
+  .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--primary-dark);
+    min-width: 180px;
+    z-index: 1000;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+  }
+
+  .submenu li a {
+    display: block;
+    padding: 10px 16px;
+    color: var(--light-color);
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+
+  .submenu li a:hover {
+    background-color: var(--secondary-color);
+  }
+
+  /* زیر منوهای تو در تو */
+  .submenu .submenu {
+    right: 100%;
+    top: 0;
+  }
+
+  li:hover > .submenu {
+    display: block;
+  }
