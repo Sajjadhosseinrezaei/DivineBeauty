@@ -166,3 +166,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sajjadhosseinrezay6@gmail.com'  # آدرس جیمیل خودت
 EMAIL_HOST_PASSWORD = 'srafcezjftffxyps'  # رمز عبور اپ (توضیحش پایین هست)
+
+
+CELERY_BROKER_URL = 'amqp://localhost'

@@ -7,6 +7,7 @@ import bcrypt
 from django.core.mail import send_mail
 import time
 from django.contrib import messages
+from accounts.tasks import send_otp_email
 
 
 def redirect_with_next(request, default='/', param_name='next'):
@@ -92,11 +93,8 @@ class OTPService:
         subject = 'کد تایید شما'
         message = f'کد تایید شما: {otp_code}'
         from_email = 'your_email@example.com'  # آدرس ایمیل خود را وارد کنید
-        try:
-            send_mail(subject, message, from_email, [email])
-            return True , "کد ارسال شد. ایمیل خود را چک کنید."
-        except Exception as e:
-            return False, f'ارسال OTP با خطا مواجه شد: {str(e)}'
+        send_otp_email.delay(subject, message, from_email, [email])
+        return True, "کد تایید به ایمیل شما ارسال شد."
 
 
     @staticmethod
