@@ -182,6 +182,9 @@ class UserLoginView(View):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
+                if 'pending_add_to_cart' in request.session:
+                    return redirect('order:resume_add_to_cart')
+                
                 messages.success(request, 'با موفقیت وارد شدید.')
                 return redirect_with_next(request, default='home:home')
             else:

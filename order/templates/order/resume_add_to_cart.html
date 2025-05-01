@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>در حال افزودن به سبد خرید...</title>
+</head>
+<body>
+    <form id="resume-form" method="post" action="{% url 'order:add_cart' id=product_id %}">
+        {% csrf_token %}
+        <input type="hidden" name="quantity" value="{{ quantity }}">
+    </form>
+
+    <script>
+        document.getElementById('resume-form').submit();
+    </script>
+</body>
+</html>

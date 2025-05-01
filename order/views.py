@@ -10,7 +10,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class AddCartItem(LoginRequiredMixin, View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            if request.method == 'POST':
+                request.session['pending_add_to_cart'] = {
+                    'product_id': kwargs['id'],
+                    'quantity': request.POST.get('quantity', 1)
+                }
+                return redirect(request.get_full_path())
+
+        
+        return super().dispatch(request, *args, **kwargs)
+    
+
     def post(self, request, *args, **kwargs):
+
+        
+
+
         cart, created = Cart.objects.get_or_create(user=request.user)
         product = get_object_or_404(Product, id=kwargs['id'])
 
@@ -44,11 +62,25 @@ class AddCartItem(LoginRequiredMixin, View):
                 
             cart.add_to_cart(product=product, quantity=quantity)
             messages.success(request, f"{product.name} با موفقیت به سبد خرید اضافه شد.")
+            if 'pending_add_to_cart' in request.session:
+                del request.session['pending_add_to_cart']
             return redirect_with_next(request, 'order:cart_detail')
 
 
             
+class ResumeAddToCartView(LoginRequiredMixin, View):
 
+    template_name = 'order/resume_add_to_cart.html'
+
+    def get(self, requset, *args, **kwargs):
+        data = requset.session.pop('pending_add_to_cart', None)
+        if not data:
+            return redirect_with_next(requset, 'home:home')
+        
+        return render(requset, self.template_name, {
+            'product_id': data['product_id'],
+            'quantity': data['quantity'],
+        })
 
 
 
