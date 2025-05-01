@@ -155,7 +155,7 @@ class OTPService:
 
         # بررسی محدودیت زمانی برای ارسال دوباره
         last_sent_time = session.get('otp_timestamp', 0)
-        if now - last_sent_time < 120:  # تغییر زمان به 60 ثانیه
+        if now - last_sent_time < 60:  # تغییر زمان به 60 ثانیه
             return False, "لطفاً یک دقیقه صبر کنید و سپس دوباره درخواست کنید."
 
         # بررسی تعداد تلاش‌ها

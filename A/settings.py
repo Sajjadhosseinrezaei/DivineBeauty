@@ -168,4 +168,4 @@ EMAIL_HOST_USER = 'sajjadhosseinrezay6@gmail.com'  # آدرس جیمیل خود�
 EMAIL_HOST_PASSWORD = 'srafcezjftffxyps'  # رمز عبور اپ (توضیحش پایین هست)
 
 
-CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'redis://localhost:6379'
