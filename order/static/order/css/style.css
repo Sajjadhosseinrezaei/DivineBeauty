@@ -7,3 +7,8 @@
 .btn-lg {
     margin: 10px;
 }
+@media (max-width: 768px) {
+    .product-image-cell {
+        display: none;
+    }
+}

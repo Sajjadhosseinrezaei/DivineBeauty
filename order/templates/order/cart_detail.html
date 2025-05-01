@@ -15,7 +15,7 @@
                     <tr>
                         <th>محصول</th>
                         <th>موجودی کالا</th>
-                        <th>تصویر</th>
+                        <th class="product-image-cell">تصویر</th>
                         <th>قیمت واحد (تومان)</th>
                         <th>تعداد</th>
                         <th>مجموع (تومان)</th>
@@ -29,7 +29,7 @@
                             <td>
                                 {{item.product.stock}}
                             </td>
-                            <td>
+                            <td class="product-image-cell">
                                 {% if item.product.main_image %}
                                     <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="img-thumbnail" style="max-width: 100px;">
                                 {% else %}
@@ -38,13 +38,28 @@
                             </td>
                             <td>{{ item.price }}</td>
                             <td>
-                                <!-- فرم برای تغییر تعداد -->
-                                <form action="{% url "order:update_quantity" item.id %}" method="post" class="d-inline">
-                                    {% csrf_token %}
-                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="100" class="form-control d-inline" style="width: 80px;">
-                                    <button type="submit" class="btn btn-sm btn-primary">به‌روزرسانی</button>
-                                </form>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <!-- دکمه کاهش -->
+                                    <form action="{% url 'order:update_quantity' item.id %}" method="post" class="me-1">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">−</button>
+                                    </form>
+                            
+                                    <!-- عدد وسط -->
+                                    <input type="text" value="{{ item.quantity }}" readonly
+                                           class="form-control text-center"
+                                           style="width: 60px; font-size: 0.9rem; padding: 0.25rem 0.5rem;">
+                            
+                                    <!-- دکمه افزایش -->
+                                    <form action="{% url 'order:update_quantity' item.id %}" method="post" class="ms-1">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
+                                        <button type="submit" class="btn btn-outline-success btn-sm">+</button>
+                                    </form>
+                                </div>
                             </td>
+                            
                             <td>{{ item.cost}}</td>
                             <td>
                                 <!-- دکمه حذف آیتم -->

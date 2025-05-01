@@ -80,7 +80,9 @@ class CartItem(models.Model):
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE, verbose_name='محصول')
     quantity = models.PositiveIntegerField(default=1, verbose_name='تعداد')
     price = models.DecimalField(max_digits=12, decimal_places=0, verbose_name='قیمت')  # قیمت محصول در زمان اضافه شدن به سبد خرید
-    
+    created = models.DateTimeField(auto_now_add=True, verbose_name='زمان ایجاد')
+
+
     def __str__(self):
         return f'{self.quantity} of {self.product.name} in Cart {self.cart.id}'
     

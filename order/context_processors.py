@@ -5,7 +5,7 @@ def cart_context(request):
     if request.user.is_authenticated:
         try:
             cart = Cart.objects.get(user=request.user)
-            cart_items = cart.items.all()
+            cart_items = cart.items.all().order_by('created')
             total_items = sum(item.quantity for item in cart_items)
             total_price = cart.get_total_price()  # فرض بر این است که متد get_total_price در مدل Cart تعریف شده است
         except Cart.DoesNotExist:
