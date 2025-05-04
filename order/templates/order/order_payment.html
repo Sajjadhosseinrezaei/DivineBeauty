@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+<style>
+    .credit-card {
+        background: linear-gradient(135deg, #1a1a1a, #434343);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .bank-name {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+    .card-number {
+        font-family: monospace;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h3 class="mb-0">پرداخت سفارش</h3>
+                </div>
+                
+                <!-- اطلاعات سفارش -->
+                <div class="card-body text-center mb-4">
+                    <div class="mb-4">
+                        <h5 class="text-muted mb-3">کد پیگیری سفارش</h5>
+                        <h4 class="text-primary">{{ order.tracking_code }}</h4>
+                    </div>
+                    <div>
+                        <h5 class="text-muted mb-3">مبلغ قابل پرداخت</h5>
+                        <h3 class="text-success">{{ order.get_total_price }} تومان</h3>
+                    </div>
+                </div>
+
+                <!-- کارت بانکی -->
+                <div class="card-body">
+                    <div class="payment-info bg-light p-4 rounded-lg mb-4">
+                        <h5 class="text-center mb-4">اطلاعات حساب بانکی فروشگاه</h5>
+                        <div class="card credit-card bg-dark text-white rounded-lg p-4" style="max-width: 450px; margin: 0 auto;">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="bank-name">
+                                    {{ payment_settings.bank_name }}
+                                </div>
+                                <div class="chip" style="width: 50px; height: 40px; background: linear-gradient(45deg, #cfb65e, #e6d195); border-radius: 8px;"></div>
+                            </div>
+                            
+                            <div class="card-number mb-4 text-center">
+                                <h4 style="letter-spacing: 3px;">{{ payment_settings.card_number }}</h4>
+                            </div>
+                            
+                            <div class="card-holder">
+                                <p class="mb-1 text-muted small">نام صاحب حساب</p>
+                                <h5>{{ payment_settings.card_owner }}</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- راهنمای پرداخت -->
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading mb-3">📌 راهنمای پرداخت:</h6>
+                        <ol class="mb-0">
+                            <li>مبلغ {{ order.get_total_price }} تومان را به شماره کارت بالا واریز نمایید.</li>
+                            <li>شماره پیگیری یا تصویر رسید پرداخت را در فرم زیر وارد کنید.</li>
+                            <li>پس از تایید پرداخت، سفارش شما پردازش خواهد شد.</li>
+                            <li>از پروفایل و قسمت سفارشات، سفارش خود را پیگیری  کنید.</li>
+                        </ol>
+                    </div>
+
+                    <!-- فرم ثبت اطلاعات پرداخت -->
+                    <form action="{% url 'order:order_payment' order.id %}" method="post" class="mt-4" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="form-group mb-3">
+                                    <label for="payment_ref">شماره پیگیری پرداخت</label>
+                                    <input type="text" class="form-control" id="payment_ref" name="payment_ref" required>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="payment_receipt">تصویر رسید پرداخت (اختیاری)</label>
+                                    <input type="file" class="form-control" id="payment_receipt" name="payment_receipt">
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success btn-lg px-5">
+                                        ثبت پرداخت
+                                    </button>
+                                    <a href="{% url 'order:cart_detail' %}" class="btn btn-outline-danger btn-lg px-5 ms-2">
+                                        انصراف
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

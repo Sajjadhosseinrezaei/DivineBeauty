@@ -15,7 +15,7 @@ class CustomUserAdmin(BaseUserAdmin):
     ordering = ('email',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'phone_number', 'date_of_birth', 'last_login', 'date_joined')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'date_of_birth', 'last_login', 'date_joined')}),
         ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser')}),
     )
     readonly_fields = ('last_login', 'date_joined')

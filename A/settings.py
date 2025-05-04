@@ -51,8 +51,39 @@ INSTALLED_APPS = [
     'rest_framework',
     'mptt',
     'django_json_widget',
+    'constance',
+    'constance.backends.database',
 
 ]
+
+# تنظیمات Constance
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+
+# تعریف تنظیمات قابل تغییر
+CONSTANCE_CONFIG = {
+    'ONLINE_PAYMENT_ENABLED': (True, 'فعال/غیرفعال بودن پرداخت آنلاین'),
+    'MINIMUM_ORDER_AMOUNT': (10000, 'حداقل مبلغ سفارش (تومان)'),
+    'FREE_SHIPPING_THRESHOLD': (100000, 'حداقل مبلغ برای ارسال رایگان'),
+    'SHOP_PHONE': ('', 'شماره تلفن فروشگاه'),
+    'SHOP_EMAIL': ('', 'ایمیل فروشگاه'),
+    'MAINTENANCE_MODE': (False, 'حالت تعمیر و نگهداری'),
+    'PAYMENT_CARD_NUMBER': ('6037-9975-9999-9999', 'شماره کارت برای پرداخت'),
+    'PAYMENT_CARD_OWNER': ('فروشگاه دیجیتال', 'نام صاحب کارت'),
+    'PAYMENT_BANK_NAME': ('بانک ملی', 'نام بانک'),
+}
+
+# گروه‌بندی تنظیمات در پنل ادمین
+CONSTANCE_CONFIG_FIELDSETS = {
+    'عمومی': ('MAINTENANCE_MODE', 'SHOP_PHONE', 'SHOP_EMAIL'),
+    'پرداخت': ('ONLINE_PAYMENT_ENABLED', 'MINIMUM_ORDER_AMOUNT'),
+    'اطلاعات کارت بانکی': (
+        'PAYMENT_CARD_NUMBER',
+        'PAYMENT_CARD_OWNER',
+        'PAYMENT_BANK_NAME',
+    ),
+    'ارسال': ('FREE_SHIPPING_THRESHOLD',),
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

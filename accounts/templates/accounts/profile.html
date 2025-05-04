@@ -32,39 +32,89 @@
                         <li class="list-group-item"><strong>وبسایت:</strong> <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a></li>
                     {% endif %}
                     <li class="list-group-item"><strong>ایمیل:</strong> {{ profile.user.email }}</li>
+                    {% if user.date_of_birth %}
+                        <li class="list-group-item"><strong>تاریخ تولد:</strong> {{ user.date_of_birth }}</li>
+                    {% endif %}
                 </ul>
 
                 <div class="mt-4 d-flex justify-content-center gap-3">
-                    <a href="#" class="btn btn-danger">ویرایش پروفایل</a>
+                    <!-- دکمه باز کردن مودال -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        ویرایش پروفایل
+                    </button>
                 </div>
-
-                <!-- بخش سبد خرید -->
-                <div class="mt-5">
-                    <h4 class="mb-4" style="color: #ff69b4;">🛒 سبد خرید شما</h4>
-
-                    {% if cart_items %}
-                        <div class="table-responsive">
-                            <table class="table table-bordered" style="background-color: white;">
-                                <thead class="table-pink" style="background-color: #ffe4ec;">
-                                    <tr>
-                                        <th>محصول</th>
-                                        <th>تعداد</th>
-                                        <th>قیمت</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in cart_items %}
-                                    <tr>
-                                        <td>{{ item.product.name }}</td>
-                                        <td>{{ item.quantity }}</td>
-                                        <td>{{ item.get_total_price }} تومان</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                
+                <!-- مودال ویرایش پروفایل -->
+                <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <form method="post" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="editProfileModalLabel">ویرایش پروفایل</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
                         </div>
+                        <div class="modal-body">
+                          {{ form.as_p }}
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                          <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                
+
+                <!-- بخش سفارشات -->
+                <div class="mt-5">
+                    <h4 class="mb-4" style="color: #ff69b4;">📦 سفارشات من</h4>
+                
+                    {% if orders %}
+                        {% for order in orders %}
+                            <div class="card mb-4 shadow-sm">
+                                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #ffe4ec;">
+                                    <span><strong>تاریخ سفارش:</strong> {{ order.created_at|date:"Y/m/d H:i" }}</span>
+                                    <span><strong>وضعیت:</strong> {{ order.get_status_display }}</span>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    {% for item in order.items.all %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                {{ item.product.name }} (×{{ item.quantity }})
+                                            </div>
+                                            <div>
+                                                {{ item.cost }} تومان
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="card-footer text-end">
+                                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                                        <div>
+                                            <strong>جمع کل:</strong> {{ order.get_total_price }} تومان
+                                        </div>
+                                        <div>
+                                            <span>
+                                                <strong>وضعیت پرداخت:</strong>
+                                                <span class="badge {% if order.is_paid %}bg-success{% else %}bg-danger{% endif %}">
+                                                    {{ order.is_paid|yesno:"پرداخت شده,پرداخت نشده" }}
+                                                </span>
+                                            </span>
+                                            {% if not order.is_paid %}
+                                                <a href="{% url 'order:order_payment' order.id %}" class="btn btn-sm btn-success ms-2">
+                                                    پرداخت
+                                                </a>
+                                            {% endif %}
+                                            <a href="{% url 'order:order_detail' order.id %}" class="btn btn-link">مشاهده جزئیات</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     {% else %}
-                        <p class="text-muted">سبد خرید شما خالی است.</p>
+                        <p class="text-muted">شما تاکنون سفارشی ثبت نکرده‌اید.</p>
                     {% endif %}
                 </div>
             </div>

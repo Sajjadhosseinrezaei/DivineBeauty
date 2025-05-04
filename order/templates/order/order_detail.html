@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-center">جزئیات سفارش</h2>
+
+    <div class="order-details">
+        <p><strong>شماره سفارش:</strong> {{ order.id }}</p>
+        <p><strong>کاربر:</strong> {{ order.user.email }}</p>
+        <p><strong>تاریخ ایجاد:</strong> {{ order.created_at|date:"Y-m-d H:i" }}</p>
+        <p><strong>تاریخ به‌روزرسانی:</strong> {{ order.updated_at|date:"Y-m-d H:i" }}</p>
+        <p><strong>وضعیت پرداخت:</strong> 
+            <span class="badge {% if order.is_paid %}bg-success{% else %}bg-danger{% endif %}">
+                {{ order.is_paid|yesno:"پرداخت شده,پرداخت نشده" }}
+            </span>
+        </p>
+        <p><strong>آدرس:</strong> {{ order.address }}</p>
+        <p><strong>کد پستی:</strong> {{ order.postal_code }}</p>
+        <p><strong>نام تحویل‌گیرنده:</strong> {{ order.receiver_name }}</p>
+        <p><strong>شماره تلفن تحویل‌گیرنده:</strong> {{ order.receiver_phone_number }}</p>
+        <p><strong>کد پیگیری:</strong> {{ order.tracking_code }}</p>
+        <p><strong>وضعیت سفارش:</strong> 
+            <span class="badge bg-primary">{{ order.get_status_display }}</span>
+        </p>
+        <p><strong>نوع پرداخت:</strong> {{ order.get_type_of_payment_display }}</p>
+    </div>
+
+    <h3 class="mt-4">آیتم‌های سفارش</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>محصول</th>
+                <th>تعداد</th>
+                <th>قیمت واحد</th>
+                <th>مجموع</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.items.all %}
+            <tr>
+                <td><a href="{% url 'products:product_detail' item.product.slug %}">{{ item.product.name }}</a></td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.cost }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>
+            <strong>مجموع کل:</strong> 
+            <span class="h4 ms-2">{{ order.get_total_price }} تومان</span>
+        </div>
+        
+        {% if not order.is_paid %}
+            <div class="payment-actions">
+                <a href="{% url 'order:order_payment' order.id %}" class="btn btn-success btn-lg">
+                    <i class="fas fa-credit-card me-2"></i>
+                    پرداخت سفارش
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if not order.is_paid %}
+        <div class="alert alert-warning mt-4">
+            <i class="fas fa-info-circle me-2"></i>
+            لطفاً برای تکمیل فرآیند سفارش، مبلغ {{ order.get_total_price }} تومان را پرداخت نمایید.
+        </div>
+    {% endif %}
+    
+</div>
+{% endblock content %}
+
+{% block style %}
+<style>
+    .order-details {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .order-details p {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .order-details p:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    .badge {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    .table {
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .payment-actions {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+{% endblock %}

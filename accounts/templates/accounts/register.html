@@ -112,7 +112,7 @@
             {% csrf_token %}
 
             <div class="form-group">
-                {{ form.first_name.label_tag }}
+                <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}<span style="color: red;">*</span></label>
                 {{ form.first_name }}
                 {% for error in form.first_name.errors %}
                     <div class="form-errors">{{ error }}</div>
@@ -120,7 +120,7 @@
             </div>
 
             <div class="form-group">
-                {{ form.last_name.label_tag }}
+                <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}<span style="color: red;">*</span></label>
                 {{ form.last_name }}
                 {% for error in form.last_name.errors %}
                     <div class="form-errors">{{ error }}</div>
@@ -128,7 +128,7 @@
             </div>
 
             <div class="form-group">
-                {{ form.phone_number.label_tag }}
+                <label for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label }}</label>
                 {{ form.phone_number }}
                 {% for error in form.phone_number.errors %}
                     <div class="form-errors">{{ error }}</div>
@@ -136,7 +136,7 @@
             </div>
 
             <div class="form-group">
-                {{ form.date_of_birth.label_tag }}
+                <label for="{{ form.date_of_birth.id_for_label }}">{{ form.date_of_birth.label }}</label>
                 <input type="date" name="date_of_birth" value="{{ form.date_of_birth.value|default:'' }}">
                 {% for error in form.date_of_birth.errors %}
                     <div class="form-errors">{{ error }}</div>
@@ -145,7 +145,7 @@
             
 
             <div class="form-group">
-                <p>{{ form.email.label_tag }}*</p>
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}<span style="color: red;">*</span></label>
                 {{ form.email }}
                 {% for error in form.email.errors %}
                     <div class="form-errors">{{ error }}</div>
@@ -153,7 +153,7 @@
             </div>
 
             <div class="form-group">
-               <p>{{ form.password1.label_tag }}*</p>
+                <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}<span style="color: red;">*</span></label>
                 {{ form.password1 }}
                 {% for error in form.password1.errors %}
                     <div class="form-errors">{{ error }}</div>
@@ -161,7 +161,7 @@
             </div>
 
             <div class="form-group">
-                <p>{{ form.password2.label_tag }}*</p>
+                <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}<span style="color: red;">*</span></label>
                 {{ form.password2 }}
                 {% for error in form.password2.errors %}
                     <div class="form-errors">{{ error }}</div>

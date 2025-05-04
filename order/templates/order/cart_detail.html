@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
+
 {% block style %}
 <link rel="stylesheet" href="{% static 'order/css/style.css' %}">
 {% endblock style %}
+
 {% block content %}
 <div class="container my-5">
     <h2 class="mb-4 text-center">سبد خرید شما</h2>
@@ -24,76 +26,107 @@
                 </thead>
                 <tbody>
                     {% for item in cart_items %}
-                        <tr>
-                            <td><a href="{% url "products:product_detail" item.product.slug %}">{{ item.product.name }}</a></td>
-                            <td>
-                                {{item.product.stock}}
-                            </td>
-                            <td class="product-image-cell">
-                                {% if item.product.main_image %}
-                                    <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="img-thumbnail" style="max-width: 100px;">
-                                {% else %}
-                                    <img src="{% static 'images/placeholder.png' %}" alt="No Image" class="img-thumbnail" style="max-width: 100px;">
-                                {% endif %}
-                            </td>
-                            <td>{{ item.price }}</td>
-                            <td>
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <!-- دکمه کاهش -->
-                                    <form action="{% url 'order:update_quantity' item.id %}" method="post" class="me-1">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">−</button>
-                                    </form>
-                            
-                                    <!-- عدد وسط -->
-                                    <input type="text" value="{{ item.quantity }}" readonly
-                                           class="form-control text-center"
-                                           style="width: 60px; font-size: 0.9rem; padding: 0.25rem 0.5rem;">
-                            
-                                    <!-- دکمه افزایش -->
-                                    <form action="{% url 'order:update_quantity' item.id %}" method="post" class="ms-1">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
-                                        <button type="submit" class="btn btn-outline-success btn-sm">+</button>
-                                    </form>
-                                </div>
-                            </td>
-                            
-                            <td>{{ item.cost}}</td>
-                            <td>
-                                <!-- دکمه حذف آیتم -->
-                                <form action="{% url "order:remove_from_cart" item.product.id %}" method="post" class="d-inline">
+                    <tr>
+                        <td>
+                            <a href="{% url 'products:product_detail' item.product.slug %}">{{ item.product.name }}</a>
+                        </td>
+                        <td>{{ item.product.stock }}</td>
+                        <td class="product-image-cell">
+                            {% if item.product.main_image %}
+                                <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="img-thumbnail" style="max-width: 100px;">
+                            {% else %}
+                                <img src="{% static 'images/placeholder.png' %}" alt="No Image" class="img-thumbnail" style="max-width: 100px;">
+                            {% endif %}
+                        </td>
+                        <td>{{ item.price }}</td>
+                        <td>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <!-- کاهش -->
+                                <form action="{% url 'order:update_quantity' item.id %}" method="post" class="me-1">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">−</button>
                                 </form>
-                            </td>
-                        </tr>
+
+                                <!-- مقدار فعلی -->
+                                <input type="text" value="{{ item.quantity }}" readonly
+                                       class="form-control text-center"
+                                       style="width: 60px; font-size: 0.9rem; padding: 0.25rem 0.5rem;">
+
+                                <!-- افزایش -->
+                                <form action="{% url 'order:update_quantity' item.id %}" method="post" class="ms-1">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
+                                    <button type="submit" class="btn btn-outline-success btn-sm">+</button>
+                                </form>
+                            </div>
+                        </td>
+                        <td>{{ item.cost }}</td>
+                        <td>
+                            <!-- حذف آیتم -->
+                            <form action="{% url 'order:remove_from_cart' item.product.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                            </form>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
 
-        <!-- نمایش مجموع قیمت و دکمه‌های عملیات -->
+        <!-- مجموع و عملیات -->
         <div class="row mt-4">
             <div class="col-md-6">
                 <h4>جزئیات سبد خرید</h4>
                 <p><strong>تعداد کل آیتم‌ها:</strong> {{ total_cart_items }}</p>
                 <p><strong>مجموع قیمت:</strong> {{ total_cart_price }} تومان</p>
-            </div>
-            <div class="col-md-6 text-end">
-                <a href="" class="btn btn-success btn-lg">تسویه حساب</a>
-                <a href="{% url "products:product_list" %}" class="btn btn-secondary btn-lg">ادامه خرید</a>
+                <a href="{% url 'products:product_list' %}" class="btn btn-secondary btn-lg">ادامه خرید</a>
+
             </div>
         </div>
-    {% else %}
-        <!-- نمایش پیام برای سبد خرید خالی -->
+        <!-- فرم اطلاعات ارسال -->
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h4>اطلاعات ارسال</h4>
+                <form action="{% url 'order:add_cart_item_to_order' %}" method="post">
+                    {% csrf_token %}
+        
+                    <div class="mb-3">
+                        <label for="receiver_name" class="form-label">نام تحویل‌گیرنده</label>
+                        <input type="text" class="form-control" id="receiver_name" name="receiver_name" required>
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="address" class="form-label">آدرس</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postal_code" class="form-label">کد پستی</label>
+                        <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="receiver_phone_number" class="form-label">شماره تلفن تحویل‌گیرنده</label>
+                        <input type="text" class="form-control" id="receiver_phone_number" name="receiver_phone_number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="type_of_payment" class="form-label">نوع پرداخت</label>
+                        <select class="form-control" id="type_of_payment" name="type_of_payment">
+                            <option value="online">پرداخت آنلاین</option>
+                            <option value="card">پرداخت با کارت</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg">تایید سفارش</button>
+                </form>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- پیام سبد خرید خالی -->
         <div class="alert alert-info text-center">
             <p>سبد خرید شما خالی است!</p>
-            <a href="{% url "products:product_list" %}" class="btn btn-primary">مشاهده محصولات</a>
+            <a href="{% url 'products:product_list' %}" class="btn btn-primary">مشاهده محصولات</a>
         </div>
     {% endif %}
 </div>
-
-<!-- استایل‌های سفارشی (اختیاری) -->
 {% endblock content %}

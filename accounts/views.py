@@ -4,8 +4,9 @@ from django.views.generic import CreateView
 from django.views import View
 from django.contrib.auth import login, authenticate, logout
 from .models import CustomUser, UserProfile
+from order.models import Order
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import UserCreationForm, UserLoginForm, OtpForm, EmailForm
+from .forms import UserCreationForm, UserLoginForm, OtpForm, EmailForm, ProfileEditForm
 from django.contrib import messages
 from utility import redirect_with_next, OTPService
 from django.contrib.auth.hashers import make_password
@@ -86,7 +87,7 @@ class UserOtpVerificationView(View):
             if success:
                 request.session['registration_token'] = secrets.token_urlsafe(16)
                 request.session['registration_token_created_at'] = timezone.now().isoformat()
-                messages.success(request, message)
+                messages.success(request, 'message')
                 return redirect('accounts:register')
             else:
                 messages.error(request, message)
@@ -135,14 +136,21 @@ class UserCreationView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
+            date_of_birth = form.cleaned_data['date_of_birth']
             user = CustomUser.objects.filter(email=email)
             if user.exists():
                 messages.error(request, 'ایمیل قبلاً ثبت شده است.')
                 return redirect('accounts:email_verify')
 
             password = form.cleaned_data['password1']
-            user = CustomUser.objects.create_user(email=email, password=password)
+            user = CustomUser.objects.create_user(email=email,
+                                                   password=password,
+                                                   first_name=first_name,
+                                                     last_name=last_name,
+                                                         date_of_birth=date_of_birth)
             user.save()
 
             # پاک کردن session بعد از ثبت موفق
@@ -202,7 +210,59 @@ class UserLogoutView(LoginRequiredMixin, View):
 
 class UserProfileView(LoginRequiredMixin, View):
     template_name = 'accounts/profile.html'
+    form_class = ProfileEditForm
 
-    def get(self, request):
-        profile = get_object_or_404(UserProfile, user=self.request.user)
-        return render(request, self.template_name, {'profile': profile})
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.profile = get_object_or_404(UserProfile, user=self.request.user)
+        self.orders = Order.objects.filter(user=self.request.user)
+        self.user = self.request.user
+
+    def get(self, request, *args, **kwargs):
+        profile = get_object_or_404(UserProfile, user=request.user)
+        user = request.user
+        initial_data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'date_of_birth': user.date_of_birth,
+            'bio': profile.bio,
+            'location': profile.location,
+            'website': profile.website,
+            # 'profile_picture': profile.profile_picture,  # معمولاً فایل‌ها را به صورت initial نمی‌گذارند
+        }
+        form = ProfileEditForm(initial=initial_data)
+        orders = Order.objects.filter(user=user)
+        return render(request, self.template_name, {
+            'profile': profile,
+            'orders': orders,
+            'form': form,
+        })
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if not form.is_valid():
+            for error in form.errors.values():
+                messages.error(request, error)
+            return render(request, self.template_name, {
+                'profile': self.profile,
+                'orders': self.orders,
+                'user': self.user,
+                'form': form,
+            })
+        # داده‌های تمیزشده را استفاده کنید
+        cd = form.cleaned_data
+        user = self.user
+        user.first_name = cd['first_name']
+        user.last_name = cd['last_name']
+        user.date_of_birth = cd['date_of_birth']
+        user.save()
+        profile = self.profile
+        profile.bio = cd['bio']
+        profile.location = cd['location']
+        profile.website = cd['website']
+        if cd['profile_picture']:
+            profile.profile_picture = cd['profile_picture']
+        profile.save()
+        messages.success(request, 'اطلاعات شما با موفقیت ثبت شد.')
+        return redirect('accounts:profile')
+        

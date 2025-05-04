@@ -1,11 +1,14 @@
+from typing import Any
+from django.http import HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from products.models import Product
-from .models import Cart, CartItem
+from .models import Cart, CartItem, Order, OrderItem, Payment
 from django.contrib import messages
 from utility import redirect_with_next
 from django.core.exceptions import ValidationError
 from django.contrib.auth.mixins import LoginRequiredMixin
+from constance import config
 # Create your views here.
 
 
@@ -25,9 +28,6 @@ class AddCartItem(LoginRequiredMixin, View):
     
 
     def post(self, request, *args, **kwargs):
-
-        
-
 
         cart, created = Cart.objects.get_or_create(user=request.user)
         product = get_object_or_404(Product, id=kwargs['id'])
@@ -138,3 +138,99 @@ class UpdateCartQuantityView(LoginRequiredMixin, View):
 
 
 
+class AddCartItemToOrderView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        cart = get_object_or_404(Cart, user=request.user)
+
+        # اعتبارسنجی فرم
+        address = request.POST.get('address', '').strip()
+        postal_code = request.POST.get('postal_code', '').strip()
+        receiver_name = request.POST.get('receiver_name', '').strip()
+        receiver_phone_number = request.POST.get('receiver_phone_number', '').strip()
+        type_of_payment = request.POST.get('type_of_payment', '').strip()
+        if type_of_payment == 'online':
+            if not config.ONLINE_PAYMENT_ENABLED:
+                messages.warning(request, "پرداخت آنلاین فعلا قابل استفاده نیست.")
+                return redirect('order:cart_detail')
+
+        if not all([address, postal_code, receiver_name, receiver_phone_number, type_of_payment]):
+            messages.warning(request, "لطفاً تمام فیلدهای اطلاعات ارسال را تکمیل کنید.")
+            return redirect('order:cart_detail')
+
+        # بررسی خالی نبودن سبد خرید
+        if not cart.items.exists():
+            messages.warning(request, "سبد خرید شما خالی است.")
+            return redirect('order:cart_detail')
+
+        # ایجاد سفارش
+        order = Order.objects.create(
+            user=request.user,
+            address=address,
+            postal_code=postal_code,
+            receiver_name=receiver_name,
+            receiver_phone_number=receiver_phone_number,
+        )
+
+        # افزودن آیتم‌ها
+        for item in cart.items.all():
+            try:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.price
+                )
+            except Exception as e:
+                order.delete()  # اگر مشکلی پیش آمد، سفارش ناقص پاک شود
+                messages.error(request, "خطایی هنگام ثبت آیتم‌ها رخ داد.")
+                return redirect('order:cart_detail')
+
+        cart.delete()  # سبد خرید پس از سفارش حذف شود
+        messages.success(request, "سفارش با موفقیت ثبت شد.")
+        return redirect('order:order_detail', order.id)
+    
+
+
+class OrderDetailView(LoginRequiredMixin, View):
+
+    template_name = 'order/order_detail.html'
+
+    def setup(self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
+
+        self.order = get_object_or_404(Order, id=kwargs['order_id'], user=request.user)
+
+        return super().setup(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'order': self.order})
+    
+
+class OrderPaymentView(LoginRequiredMixin, View):
+
+    template_name = 'order/order_payment.html'
+
+    def get(self, request, *args, **kwargs):
+        order = get_object_or_404(Order, id=kwargs['order_id'])
+        context = {
+            'order': order,
+            'payment_settings': {
+                'card_number': config.PAYMENT_CARD_NUMBER,
+                'card_owner': config.PAYMENT_CARD_OWNER,
+                'bank_name': config.PAYMENT_BANK_NAME,
+            }
+        }
+        return render(request, self.template_name, context)
+    
+    def post(self, request, *args, **kwargs):
+        order = get_object_or_404(Order, id=kwargs['order_id'])
+        amount = order.get_total_price()
+        payment_method = 'card'
+        ref_id = request.POST.get('payment_ref')
+        payment = Payment.objects.create(
+            order=order,
+            amount=amount,
+            payment_method=payment_method,
+            ref_id=ref_id,
+        )
+        messages.success(request, 'منتظر بمانید تا پرداخت توسط ادمین بررسی شود ، میتوانید از پروفایل وضعیت سفارش را مشاهده کنید')
+        return redirect('order:order_detail', order.id)
