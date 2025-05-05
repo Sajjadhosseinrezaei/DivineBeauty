@@ -1,7 +1,7 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from utility import AutoSlugField
-
+from accounts.models import CustomUser
 class Brand(models.Model):
     name = models.CharField(max_length=200, verbose_name="نام برند")
 
@@ -78,3 +78,14 @@ class ProductImage(models.Model):
         return self.product.name
     
 
+
+class Comment(MPTTModel):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments', verbose_name="محصول")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments', verbose_name="کاربر")
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, related_name='sub_comments', verbose_name="نظر والد", blank=True, null=True)
+    comment = models.TextField(verbose_name="نظر")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ بروزرسانی")
+
+    def __str__(self):
+        return f"{self.user} - {self.product} - {self.comment[:30]}"

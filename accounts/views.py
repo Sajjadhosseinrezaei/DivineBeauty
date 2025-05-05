@@ -212,29 +212,41 @@ class UserProfileView(LoginRequiredMixin, View):
     template_name = 'accounts/profile.html'
     form_class = ProfileEditForm
 
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, 'برای دسترسی به این صفحه باید وارد حساب کاربری خود شوید.')
+            return redirect('accounts:login')
+        return super().dispatch(request, *args, **kwargs)
+
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-        self.profile = get_object_or_404(UserProfile, user=self.request.user)
-        self.orders = Order.objects.filter(user=self.request.user)
-        self.user = self.request.user
+        if not request.user.is_authenticated:
+            self.profile = None
+            self.orders = None
+            self.user = None
+            return
+        self.profile = get_object_or_404(UserProfile, user=request.user)
+        self.orders = Order.objects.filter(user=request.user)
+        self.user = request.user
 
     def get(self, request, *args, **kwargs):
-        profile = get_object_or_404(UserProfile, user=request.user)
+        
         user = request.user
         initial_data = {
             'first_name': user.first_name,
             'last_name': user.last_name,
             'date_of_birth': user.date_of_birth,
-            'bio': profile.bio,
-            'location': profile.location,
-            'website': profile.website,
+            'bio': self.profile.bio,
+            'location': self.profile.location,
+            'website': self.profile.website,
             # 'profile_picture': profile.profile_picture,  # معمولاً فایل‌ها را به صورت initial نمی‌گذارند
         }
         form = ProfileEditForm(initial=initial_data)
         orders = Order.objects.filter(user=user)
         return render(request, self.template_name, {
-            'profile': profile,
-            'orders': orders,
+            'profile': self.profile,
+            'orders': self.orders,
             'form': form,
         })
 

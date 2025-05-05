@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
     <!-- Product Details -->
     <section class="product-details">
@@ -112,37 +113,78 @@
             </div>
         </div>
     </section>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const thumbnails = document.querySelectorAll('.gallery-thumb');
-            const mainImage = document.getElementById('main-image');
-            
-            thumbnails.forEach(function(thumb) {
-                thumb.addEventListener('click', function() {
-                    const newImageSrc = this.getAttribute('data-src');
-                    mainImage.setAttribute('src', newImageSrc);
-                });
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            const decreaseBtn = document.getElementById('decrease-btn');
-            const increaseBtn = document.getElementById('increase-btn');
-            const quantityInput = document.getElementById('quantity-number');
-        
-            // افزایش مقدار
-            increaseBtn.addEventListener('click', function() {
-                let currentValue = parseInt(quantityInput.value);
-                quantityInput.value = currentValue + 1;
-            });
-        
-            // کاهش مقدار
-            decreaseBtn.addEventListener('click', function() {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-            });
-        });
-         
-    </script>
+
+    <!-- بخش نظرات محصول -->
+    <section class="product-comments mt-5">
+        <div class="container">
+            <!-- فرم ثبت نظر -->
+            <div class="mt-5">
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'products:comment_create' product.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_comment" class="form-label">متن نظر شما</label>
+                            <textarea class="form-control" id="id_comment" name="comment" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">ثبت نظر</button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning">برای ثبت نظر باید وارد حساب کاربری خود شوید.</div>
+                {% endif %}
+            </div>
+            <br>
+            <h3 class="mb-4">نظرات کاربران</h3>
+            {% load mptt_tags %}
+            {% if comments %}
+                <ul class="list-unstyled">
+                    {% recursetree comments %}
+                        <li class="mb-3">
+                            <div class="comment-box p-3 bg-light rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <strong class="me-2">{{ node.user.first_name }} {{ node.user.last_name }}</strong>
+                                    <span class="text-muted small">{{ node.created_at|date:"Y/m/d H:i" }}</span>
+                                </div>
+                                <div class="comment-text">{{ node.comment }}</div>
+                                {% if user.is_authenticated %}
+                                    <button class="btn btn-link btn-sm p-0 mt-2 reply-btn" data-parent="{{ node.id }}">پاسخ</button>
+                                {% endif %}
+                                {% if user.is_authenticated%}
+                                {% if user == node.user or user.is_superuser %}
+                                    <form method="post" action="{% url 'products:comment_delete' node.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-link btn-sm text-danger p-0 ms-2" onclick="return confirm('آیا از حذف این نظر مطمئن هستید؟');">
+                                            حذف
+                                        </button>
+                                    </form>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <!-- فرم ریپلای (در ابتدا مخفی) -->
+                            <form method="post" action="{% url 'products:comment_create' product.id %}" class="reply-form mt-2 d-none" data-parent="{{ node.id }}">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent" value="{{ node.id }}">
+                                <div class="mb-2">
+                                    <textarea class="form-control" name="comment" rows="2" required placeholder="پاسخ شما..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">ارسال پاسخ</button>
+                                <button type="button" class="btn btn-secondary btn-sm cancel-reply">انصراف</button>
+                            </form>
+                            {% if not node.is_leaf_node %}
+                                <ul class="list-unstyled ms-4">
+                                    {{ children }}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endrecursetree %}
+                </ul>
+            {% else %}
+                <div class="alert alert-info">هنوز نظری برای این محصول ثبت نشده است.</div>
+            {% endif %}
+        </div>
+    </section>
+
+
 {% endblock content %}
+{% block script %}
+<script src="{% static 'products/js/main.js' %}"></script>
+{% endblock script %}

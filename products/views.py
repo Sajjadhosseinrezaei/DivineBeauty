@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from typing import Any
+from django.db.models.query import QuerySet
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
-from .models import Product, Category
-
+from .models import Product, Category, Comment
+from django.views import View
+from django.contrib import messages
 # Create your views here.
 
 class ProductListView(ListView):
@@ -46,6 +49,39 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
+        comments = Comment.objects.filter(product=product)
+        context['comments'] = comments
         if product.attributes:
             context['product_attributes'] = product.attributes.items()
         return context
+
+
+class CommentCreateView(View):
+    def post(self, request, *args, **kwargs):
+        product_id = self.kwargs.get('id')
+        product = get_object_or_404(Product, id=product_id)
+        parent_id = request.POST.get('parent')
+        parent = None
+        if parent_id:
+            try:
+                parent = Comment.objects.get(id=parent_id)
+            except Comment.DoesNotExist:
+                parent = None
+        comment = Comment(
+            product=product,
+            user=request.user,
+            comment=request.POST.get('comment'),
+            parent=parent
+        )
+        comment.save()
+        messages.success(request, 'نظر شما با موفقیت ثبت شد.')
+        return redirect('products:product_detail', product.slug)
+    
+
+class CommentDeleteView(View):
+    def post(self, request, *args, **kwargs):
+        comment_id = self.kwargs.get('id')
+        comment = get_object_or_404(Comment, id=comment_id)
+        comment.delete()
+        messages.success(request, 'نظر شما با موفقیت حذف شد.')
+        return redirect('products:product_detail', comment.product.slug)
