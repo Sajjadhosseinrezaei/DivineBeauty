@@ -11,4 +11,5 @@ urlpatterns = [
     path('resend/otp/', views.ResendOTPView.as_view(), name='resend_otp'),
     path('register/', views.UserCreationView.as_view(), name='register'),
     path('profile/', views.UserProfileView.as_view(), name='profile'),
+    path('api/users/', views.UserListCreateApiView.as_view(), name='users'),
 ]

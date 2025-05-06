@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from products.models import Product
-from .serializers import ProductSerializer
+from products.models import Product, Comment, Category
+from .serializers import ProductSerializer, CommentSerializer, CategorySerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import ListAPIView
+from rest_framework.generics import RetrieveDestroyAPIView
 # Create your views here.
 class CustomPagination(PageNumberPagination):
     page_size = 10
@@ -33,3 +35,22 @@ class ProductViewSet(viewsets.ModelViewSet):
         else:
             # رفتار پیش‌فرض برای ایجاد یک محصول
             return super().create(request, *args, **kwargs)
+        
+
+
+class Comments(ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    pagination_class = CustomPagination
+
+
+class CommentDetail(RetrieveDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    lookup_field = 'id'
+
+
+class CategoryListView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    pagination_class = CustomPagination

@@ -13,7 +13,9 @@ from django.contrib.auth.hashers import make_password
 import time
 import secrets
 from django.utils import timezone
-
+from rest_framework.generics import ListCreateAPIView
+from .serializers import UserSerializer
+from rest_framework.permissions import IsAdminUser
 # Create your views here.
 
 class UserEmailVerificationView(View):
@@ -278,3 +280,13 @@ class UserProfileView(LoginRequiredMixin, View):
         messages.success(request, 'اطلاعات شما با موفقیت ثبت شد.')
         return redirect('accounts:profile')
         
+
+
+
+class UserListCreateApiView(ListCreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+
+
