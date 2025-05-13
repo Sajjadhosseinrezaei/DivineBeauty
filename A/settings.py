@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 from datetime import timedelta
+from urllib.parse import urlparse
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -54,6 +55,8 @@ INSTALLED_APPS = [
     'constance',
     'constance.backends.database',
     'rest_framework_simplejwt',
+    'cloudinary',
+    'cloudinary_storage',
 
 ]
 
@@ -94,6 +97,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'A.urls'
@@ -120,9 +124,20 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+STORAGES = {
+    # ...
+    'default':{
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+
+
 
 
 
@@ -132,16 +147,31 @@ WSGI_APPLICATION = 'A.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+
+load_dotenv()
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DivineBeauty',  # نام دیتابیس
-        'USER': 'postgres',      # نام کاربری دیتابیس
-        'PASSWORD': 'postgres',  # پسورد دیتابیس
-        'HOST': 'localhost',   # آدرس هاست (برای استفاده از دیتابیس لوکال localhost رو بذار)
-        'PORT': '5432',        # پورت پیش‌فرض PostgreSQL
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'DivineBeauty',  # نام دیتابیس
+#         'USER': 'postgres',      # نام کاربری دیتابیس
+#         'PASSWORD': 'postgres',  # پسورد دیتابیس
+#         'HOST': 'localhost',   # آدرس هاست (برای استفاده از دیتابیس لوکال localhost رو بذار)
+#         'PORT': '5432',        # پورت پیش‌فرض PostgreSQL
+#     }
+# }
 
 
 
@@ -212,6 +242,20 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=2),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
+
+
+
+MEDIA_URL = 'media/'
+
+
 
